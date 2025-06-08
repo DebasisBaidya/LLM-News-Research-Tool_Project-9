@@ -1,3 +1,5 @@
+# ✅ Phase 3 + 7 Combined: Streamlit Interface + Enhancements
+
 import streamlit as st
 import pandas as pd
 from langchain_config import llm_chain, get_summary
@@ -13,6 +15,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# 📌 Task 7.1: Add User Authentication
 # 🔐 Handling login authentication for the app
 def handle_authentication():
     if 'authenticated' not in st.session_state:
@@ -63,6 +66,7 @@ def reset_all():
     st.session_state.query_input = ""  # 🧹 Clearing input
     st.rerun()  # 🔁 Reloading the app
 
+# 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 # 🧠 Handling the main flow: input → AI summary → download
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
@@ -167,6 +171,7 @@ def generate_summary_and_output():
             st.warning("⚠️ Please enter a query to get the summary.")
     return query, response
 
+# 📌 Task 7.3: View Query History
 # 📚 Showing the last 5 queries and summaries
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
