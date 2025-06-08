@@ -57,7 +57,7 @@ def handle_authentication():
 def reset_all():
     for key in list(st.session_state.keys()):
         del st.session_state[key]
-    st.switch_page("/app.py")
+    st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 def generate_summary_and_output():
@@ -74,14 +74,14 @@ def generate_summary_and_output():
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    # ✅ Placing buttons side-by-side and centered in a row
-    btn_col = st.columns([3, 4, 3])
-    with btn_col[1]:
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
-        with col2:
-            reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
+    # ✅ Placing buttons side-by-side and centered with auto-fitting rectangles
+    st.markdown("<div style='display:flex; justify-content:center; gap:1rem; margin-top:1rem;'>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
+    with col2:
+        reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset:
         reset_all()
@@ -92,7 +92,7 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            st.success(response)
+            st.write(response)  # ✅ Ensures full content shows without truncation
 
             if 'history' not in st.session_state:
                 st.session_state.history = []
