@@ -56,9 +56,13 @@ def handle_authentication():
 
 # 📌 Function to reset session states
 def reset_all():
+    preserved_keys = {'authenticated'}  # Keep login state
     for key in list(st.session_state.keys()):
-        del st.session_state[key]
-    st.switch_page("/app.py")
+        if key not in preserved_keys:
+            del st.session_state[key]
+    st.session_state.query_input = ""
+    st.session_state.query = ""
+    st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 def generate_summary_and_output():
