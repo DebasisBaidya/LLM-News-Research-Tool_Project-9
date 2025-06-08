@@ -9,8 +9,8 @@ import io
 # 🧱 Setting up the app layout
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
-    <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
-    <p style='text-align: center; margin: 0;'>Summarize real-time news articles smartly using AI</p>
+    <h1 style='text-align: center; margin-bottom: 0.1rem;'>🧠 LLM: News Research Tool</h1>
+    <p style='text-align: center; margin: 0 0 1rem;'>Summarize real-time news articles smartly using AI</p>
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
@@ -20,8 +20,8 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 75vh; flex-direction: column;'>
-                <h3 style='text-align:center; margin: 0.5rem 0;'>🔐 Login Required</h3>
+            <div style='display: flex; justify-content: center; align-items: center; height: 65vh; flex-direction: column;'>
+                <h3 style='margin-bottom: 0.2rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
@@ -80,7 +80,7 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})  # I’m generating smart summary
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            st.success(response)
+            st.success(response[:1500] + ('...' if len(response) > 1500 else ''))  # I’m limiting long summary display
 
             if 'history' not in st.session_state:
                 st.session_state.history = []  # I’m initializing query history
