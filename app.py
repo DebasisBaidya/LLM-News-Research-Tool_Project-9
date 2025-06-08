@@ -11,7 +11,7 @@ st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
     <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
     <p style='text-align: center; margin-top: 0;'>Summarize real-time news articles smartly using AI</p>
-""", unsafe_allow_html=True)
+""")
 
 # 📌 Task 7.1: Add User Authentication
 def handle_authentication():
