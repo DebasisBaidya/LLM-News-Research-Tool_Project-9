@@ -19,12 +19,19 @@ NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 # I’m connecting to Groq's LLaMA3 model (powerful, fast, free to use)
 llm = ChatGroq(groq_api_key=GROQ_API_KEY, model_name="llama3-70b-8192")
 
-# ✅ Updated Prompt Template for general-purpose news summarization
+# ✅ 🧠 Prompt Template with Crisp Bullet Output
 initial_template = """
-You are an intelligent AI assistant that summarizes the latest news on any topic. 
-Given a user query, gather and generate a brief, clear, and short informative overview of recent news articles on that topic.
+🗞️ **Latest News Summary on: {query}**
 
-Query: {query}
+You are a smart and concise AI assistant summarizing breaking or trending news. Based on the topic, generate a short, factual overview in 3 to 5 bullet points.
+
+🎯 Format: Bullet points only  
+✅ Tone: Crisp, neutral, informative  
+🚫 Avoid: Repetition, filler, and vague language
+
+Provide the summary below:
+
+- 
 """
 
 # ✅ Creating a prompt object with input variable 'query'
