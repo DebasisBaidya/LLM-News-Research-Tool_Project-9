@@ -8,6 +8,8 @@
 
 </div>
 
+🔗 **Live App**: https://llm-news-research-tool-debasisbaidya.streamlit.app/  
+🎬 **Demo Video**: https://your-demo-video-link.com
 
 ---
 
