@@ -2,4 +2,5 @@ langchain
 streamlit
 newsapi-python
 groq
+langchain-groq
 python-dotenv
