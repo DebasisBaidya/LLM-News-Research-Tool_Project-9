@@ -17,7 +17,7 @@ from newsapi import NewsApiClient
 # NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 # Set API Keys
-GROQ_API_KEY = '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'
+GROQ_API_KEY = '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'
 NEWS_API_KEY= '0a84155d710b49c78edf28b293c3218f'
 
 # ✅ Initializing Groq-based LLM
