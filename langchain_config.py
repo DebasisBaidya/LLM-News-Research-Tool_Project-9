@@ -22,7 +22,7 @@ llm = ChatGroq(groq_api_key=GROQ_API_KEY, model_name="llama3-70b-8192")
 # ✅ Updated Prompt Template for general-purpose news summarization
 initial_template = """
 You are an intelligent AI assistant that summarizes the latest news on any topic. 
-Given a user query, gather and generate a brief, clear, and informative overview of recent news articles on that topic.
+Given a user query, gather and generate a brief, clear, and concised informative overview of most-recent news articles on that topic.
 
 Query: {query}
 """
