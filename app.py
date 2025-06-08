@@ -20,8 +20,8 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 75vh; flex-direction: column;'>
-                <h3 style='text-align:center; margin-bottom: 1rem;'>🔐 Login Required</h3>
+            <div style='display: flex; justify-content: center; align-items: center; height: 60vh; flex-direction: column;'>
+                <h3 style='text-align:center; margin-bottom: 0.5rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
@@ -41,8 +41,7 @@ def handle_authentication():
 def reset_all():
     for key in list(st.session_state.keys()):
         del st.session_state[key]  # I’m removing session keys one by one
-    st.experimental_set_query_params()  # I’m resetting query params
-    st.rerun()  # I’m rerunning app after reset
+    st.switch_page("/app.py")  # I’m properly resetting without experimental rerun
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 def generate_summary_and_output():
@@ -60,16 +59,11 @@ def generate_summary_and_output():
     response = ""
 
     # 📌 Centrally aligned action buttons below input
-    st.markdown("""
-    <div style='display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;'>
-        <div style='flex:1'>
-    """, unsafe_allow_html=True)
-    generate = st.button('⚡ Generate Summary', key='generate_btn')  # I’m triggering summary
-    st.markdown("""
-        </div><div style='flex:1'>
-    """, unsafe_allow_html=True)
-    reset = st.button("🔄 Reset All", key='reset_btn')  # I’m resetting app
-    st.markdown("</div></div>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1], gap="large")
+    with col1:
+        generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)  # I’m triggering summary
+    with col2:
+        reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)  # I’m resetting app
 
     if reset:
         reset_all()
