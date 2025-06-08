@@ -1,6 +1,3 @@
-```markdown
-<div align="center">
-
 # 🧠 LLM Project: News Research Tool  
 🔍 Real-Time AI-Powered News Summarizer using LangChain, Groq & NewsAPI
 
