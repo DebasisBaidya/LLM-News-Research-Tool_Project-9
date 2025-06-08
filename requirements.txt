@@ -4,3 +4,4 @@ newsapi-python
 groq
 langchain-groq
 python-dotenv
+fpdf
