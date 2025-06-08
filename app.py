@@ -11,7 +11,7 @@ st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
     <div style='display: flex; flex-direction: column; align-items: center; margin-top: 2rem;'>
         <h1 style='text-align: center; margin-bottom: 0.25rem;'>🧠 LLM: News Research Tool</h1>
-        <p style='text-align: center; margin-top: -0.25rem;'>Summarize real-time news articles smartly using AI 🔐 Login Required</p>
+        <p style='text-align: center; margin-top: 0.25rem;'>Summarize real-time news articles smartly using AI 🔐 Login Required</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -27,13 +27,17 @@ def handle_authentication():
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 75vh;
                 flex-direction: column;
-                gap: 0.5rem;
+                margin: 0 auto;
+                padding: 1rem 2rem;
+                max-width: 400px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             }
             </style>
             <div class='login-container'>
-                <h3 style='margin-bottom: 0;'>🔐 Login Required</h3>
+                <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
@@ -70,14 +74,14 @@ def generate_summary_and_output():
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    st.markdown("""
-        <div style='display: flex; justify-content: center; flex-direction: column; align-items: center; gap: 0.75rem; margin-top: 1rem;'>
-    """, unsafe_allow_html=True)
-
-    generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=False)
-    reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=False)
-
-    st.markdown("</div>", unsafe_allow_html=True)
+    # ✅ Placing buttons side-by-side and centered
+    btn_col = st.columns([1, 1, 1])
+    with btn_col[1]:
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
+        with col2:
+            reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
 
     if reset:
         reset_all()
