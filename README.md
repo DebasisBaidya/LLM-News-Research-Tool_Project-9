@@ -6,15 +6,8 @@
 [![LangChain](https://img.shields.io/badge/LangChain%20+%20Groq-News%20API-orange?style=for-the-badge)](https://www.langchain.com/)
 
 </div>
-<a href="https://www.linkedin.com/in/debasisbaidya" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin&logoColor=white&style=flat" />
-  </a>
-  <a href="mailto:speak2debasis@gmail.com">
-    <img src="https://img.shields.io/badge/Gmail-Mail_Me-red?logo=gmail&logoColor=white&style=flat" />
-  </a>
-  <a href="https://api.whatsapp.com/send?phone=918013316086&text=Hi%20Debasis!">
-    <img src="https://img.shields.io/badge/WhatsApp-Chat-green?logo=whatsapp&logoColor=white&style=flat" />
-  </a>
+
+
 ---
 
 ## 📌 Project Overview
@@ -87,21 +80,16 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 ## 👤 Author: Debasis Baidya
 
-<table>
-  <tr>
-    <td><strong>🔗 LinkedIn</strong></td>
-    <td><a href="https://www.linkedin.com/in/debasisbaidya">linkedin.com/in/debasisbaidya</a></td>
-  </tr>
-  <tr>
-    <td><strong>💬 WhatsApp</strong></td>
-    <td><a href="https://wa.me/918336974322">wa.me/918336974322</a></td>
-  </tr>
-  <tr>
-    <td><strong>💻 GitHub</strong></td>
-    <td><a href="https://github.com/debasisbaidya">github.com/debasisbaidya</a></td>
-  </tr>
-</table>
-
+<a href="https://www.linkedin.com/in/debasisbaidya" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin&logoColor=white&style=flat" />
+  </a>
+  <a href="mailto:speak2debasis@gmail.com">
+    <img src="https://img.shields.io/badge/Gmail-Mail_Me-red?logo=gmail&logoColor=white&style=flat" />
+  </a>
+  <a href="https://api.whatsapp.com/send?phone=918013316086&text=Hi%20Debasis!">
+    <img src="https://img.shields.io/badge/WhatsApp-Chat-green?logo=whatsapp&logoColor=white&style=flat" />
+  </a>
+  
 ---
 
 ## 🧠 Powered By
