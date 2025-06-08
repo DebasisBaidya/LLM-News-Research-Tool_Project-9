@@ -84,26 +84,14 @@ def generate_summary_and_output():
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    # ✅ Styled side-by-side rectangular buttons
-    st.markdown("""
-        <style>
-        .rect-button button {
-            width: 100%;
-            padding: 0.75rem;
-            font-size: 16px;
-            border-radius: 8px;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    btn_col = st.columns([3, 4, 3])
-    with btn_col[1]:
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            with st.container():
-                generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
-        with col2:
-            with st.container():
-                reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
+# ✅ Placing buttons side-by-side and centered with auto-fitting rectangles
+    st.markdown("<div style='display:flex; justify-content:center; gap:1rem; margin-top:1rem;'>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
+    with col2:
+        reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset:
         reset_all()
