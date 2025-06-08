@@ -1,102 +1,117 @@
-# 📰 Equity Research News Tool
+```markdown
+<div align="center">
 
-An interactive AI-powered tool that fetches and summarizes the latest news articles in real-time using **NewsAPI** and **Groq’s LLM (via LangChain)**. Built with a simple **Streamlit interface**, this tool is designed to assist equity research analysts in quickly understanding market-moving news.
+# 🧠 LLM Project: News Research Tool  
+🔍 Real-Time AI-Powered News Summarizer using LangChain, Groq & NewsAPI
 
----
+[![Streamlit App](https://img.shields.io/badge/🚀%20Live%20App-Open%20in%20Browser-brightgreen?style=for-the-badge)](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge)](https://www.python.org/downloads/release/python-3130a1/)
+[![LangChain](https://img.shields.io/badge/LangChain%20+%20Groq-AI%20Backend-orange?style=for-the-badge)](https://www.langchain.com/)
 
-## 🚀 Features
-
-- 🔍 Search and summarize live news articles based on any topic or company  
-- 🧠 Uses **Groq’s Mixtral LLM** for smart, human-like summarization  
-- 📡 Fetches real-time articles via **NewsAPI**  
-- 🖥️ Intuitive Streamlit interface – No technical knowledge required  
-
----
-
-## 🧰 Tech Stack
-
-- 🦜 LangChain  
-- 🧠 Groq LLM (Mixtral)  
-- 🌐 NewsAPI  
-- 🌿 Streamlit  
-- 🔐 python-dotenv  
+</div>
 
 ---
 
-## 🔧 Setup Instructions
+## 📌 Project Overview
 
-### 1. Clone the Repository
+The **News Research Tool** is an interactive web app that allows users to:
 
-```bash
-git clone https://github.com/your-username/news-research-tool.git
-cd news-research-tool
+- 🔍 Search for any trending topic (e.g. "AI in healthcare", "Global warming")
+- 📡 Fetch real-time articles using **NewsAPI**
+- 🧠 Generate crisp, point-wise summaries using **Groq's LLaMA3** via **LangChain**
+- 🖥️ Use a simple, secure **Streamlit interface**
+- 📥 Download summaries as `.txt` or `.pdf`
+- 📚 See previous query history
+
+---
+
+## 🚀 Key Features
+
+- 🔐 Login-required access (username/password)
+- 🔍 Real-time topic-based news search
+- 🧠 Short bullet-style summarization using LLM
+- 📁 Export summaries in multiple formats
+- 💡 Suggestion buttons for quick start
+- 🕓 Past 5-query history preview
+
+---
+
+## 🧰 Built With
+
+| Component       | Purpose                           |
+|------------------|-----------------------------------|
+| 🐍 Python 3.13    | Base language                     |
+| 🧠 Groq (LLaMA3)  | Fast LLM summarization            |
+| 🦜 LangChain      | LLM orchestration logic           |
+| 🌐 NewsAPI        | Real-time news data               |
+| 🌿 Streamlit      | Web app frontend                  |
+| 🧾 FPDF           | PDF export generation             |
+| 🔐 python-dotenv  | Secure API key loading            |
+
+---
+
+## 📁 File Structure
+
 ```
 
-### 2. Install Dependencies
+├── app.py               # Streamlit interface
+├── langchain\_config.py  # LLM + NewsAPI setup
+├── .env                 # API keys (kept secret)
+├── requirements.txt     # Python dependencies
+└── README.md            # This documentation
 
-```bash
-pip install langchain streamlit newsapi-python groq python-dotenv
-```
-
-### 3. Get API Keys
-
-- 🔑 [Groq API Key](https://console.groq.com/keys)  
-- 🔑 [NewsAPI Key](https://newsapi.org/)  
-
-### 4. Create `.env` File
-
-Create a `.env` file in the project root and add:
-
-```
-GROQ_API_KEY=your-groq-api-key
-NEWS_API_KEY=your-newsapi-key
-```
-
----
-
-## ▶️ How to Run the App
-
-```bash
-streamlit run app.py
-```
-
----
-
-## 📸 App Interface
-
-- **Input Box** – Enter your topic or query (e.g., “Tesla stock”, “Artificial Intelligence”)  
-- **Button** – Click "Get News Summary"  
-- **Output** – AI-generated concise news summary displayed below  
-
----
-
-## 🧠 Behind the Scenes
-
-- The app fetches news from **NewsAPI**  
-- Extracts key content from article descriptions  
-- Sends it to **Groq LLM via LangChain** with a tailored prompt  
-- Displays the intelligent, AI-generated summary on-screen  
-
----
-
-## 📁 Project Structure
-
-```
-├── app.py               # Streamlit front-end  
-├── langchain_config.py  # LangChain + Groq + NewsAPI integration  
-├── .env                 # API keys (excluded from Git)  
-└── README.md            # Project documentation  
 ```
 
 ---
 
-## 👨‍💻 Author
+## 📸 App Preview
 
-**Debasis Baidya**  
-🔗 [LinkedIn](https://www.linkedin.com/in/debasisbaidya)
+> _Replace this placeholder with a real screenshot_
+
+![App Screenshot](https://your-screenshot-link.com)
 
 ---
 
-## 📄 License
+## 🎬 Demo Video
 
-This project is licensed under the MIT License.
+> _How the App Works_
+
+🎥 [Watch Demo](https://your-demo-link.com)
+
+---
+
+## 👤 Author: Debasis Baidya
+
+<table>
+  <tr>
+    <td><strong>🔗 LinkedIn</strong></td>
+    <td><a href="https://www.linkedin.com/in/debasisbaidya">linkedin.com/in/debasisbaidya</a></td>
+  </tr>
+  <tr>
+    <td><strong>💬 WhatsApp</strong></td>
+    <td><a href="https://wa.me/918336974322">wa.me/918336974322</a></td>
+  </tr>
+  <tr>
+    <td><strong>💻 GitHub</strong></td>
+    <td><a href="https://github.com/debasisbaidya">github.com/debasisbaidya</a></td>
+  </tr>
+</table>
+
+---
+
+## 🧠 Powered By
+
+- [LangChain](https://www.langchain.com/)  
+- [Groq API](https://console.groq.com/)  
+- [NewsAPI](https://newsapi.org/)  
+- [Streamlit](https://streamlit.io/)
+
+> ✨ Built for smart research and crisp insights using real-time LLMs.
+```
+
+---
+
+### ✅ Final Steps for You:
+
+* Replace `https://your-screenshot-link.com` and `https://your-demo-link.com` as needed.
+* Paste the content above into your `README.md` file.
