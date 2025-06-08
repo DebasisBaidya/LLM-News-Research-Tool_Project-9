@@ -85,8 +85,13 @@ def generate_summary_and_output():
             if st.button(example, use_container_width=True):
                 st.session_state.query_input = example
 
-    query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
-    response = ""
+    query = st.text_area(
+    '🔍 Enter your Query',
+    key='query_input',
+    placeholder="e.g., Global Warming Impact",
+    height=100,  # You can increase this value for more height
+    help="Try real-time topics like AI, politics, climate, finance"
+)
 
 # ✅ Placing buttons side-by-side and centered with auto-fitting rectangles
     st.markdown("<div style='display:flex; justify-content:center; gap:1rem; margin-top:1rem;'>", unsafe_allow_html=True)
