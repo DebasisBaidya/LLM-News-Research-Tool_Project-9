@@ -8,8 +8,8 @@
 
 </div>
 
-🔗 **Live App**: https://llm-news-research-tool-debasisbaidya.streamlit.app/  
-🎬 **Demo Video**: https://your-demo-video-link.com
+🔗 **Live App**: [Click here to try the app](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
+🎬 **Demo Video**: [Watch the demo video](https://your-demo-video-link.com)
 
 ---
 
