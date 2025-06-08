@@ -28,7 +28,7 @@ def handle_authentication():
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
-                margin-top: -2rem;
+                margin: 0 auto;
                 padding: 1rem 2rem;
                 max-width: 400px;
                 background-color: #f9f9f9;
@@ -65,11 +65,13 @@ def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
 
     # 📌 Example buttons in uniform size boxes
-    examples = ["India Election 2024", "AI in Healthcare", "Stock Market Crash", "Climate Change Effects"]
+    examples = ["Indian Economy", "AI in Healthcare", "Stock Market Crash", "POK Issues"]
     st.markdown("""
         <style>
             .stButton > button {
                 width: 100% !important;
+                border-radius: 8px;
+                padding: 0.5rem 1rem;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -82,14 +84,26 @@ def generate_summary_and_output():
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    # ✅ Placing buttons side-by-side and centered in a row
+    # ✅ Styled side-by-side rectangular buttons
+    st.markdown("""
+        <style>
+        .rect-button button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
     btn_col = st.columns([3, 4, 3])
     with btn_col[1]:
         col1, col2 = st.columns([1, 1])
         with col1:
-            generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
+            with st.container():
+                generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
         with col2:
-            reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
+            with st.container():
+                reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
 
     if reset:
         reset_all()
