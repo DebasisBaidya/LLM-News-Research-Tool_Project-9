@@ -9,9 +9,9 @@ import io
 # 🧱 Setting up the app layout
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
-    <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
+    <h1 style='text-align: center; margin-bottom: 0.01rem;'>🧠 LLM: News Research Tool</h1>
     <p style='text-align: center; margin-top: 0;'>Summarize real-time news articles smartly using AI</p>
-""")
+""", unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
 def handle_authentication():
@@ -21,7 +21,7 @@ def handle_authentication():
     if not st.session_state.authenticated:
         st.markdown("""
             <div style='display: flex; justify-content: center; align-items: center; height: 60vh; flex-direction: column;'>
-                <h3 style='text-align:center; margin-bottom: 0.5rem;'>🔐 Login Required</h3>
+                <h3 style='text-align:center; margin-bottom: 0.01rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
