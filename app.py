@@ -9,8 +9,8 @@ import io
 # 🧱 Setting up the app layout
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
-    <h1 style='text-align: center; margin-bottom: 0.01rem;'>🧠 LLM: News Research Tool</h1>
-    <p style='text-align: center; margin-top: 0;'>Summarize real-time news articles smartly using AI</p>
+    <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
+    <p style='text-align: center; margin: 0;'>Summarize real-time news articles smartly using AI</p>
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
@@ -20,14 +20,14 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 60vh; flex-direction: column;'>
-                <h3 style='text-align:center; margin-bottom: 0.01rem;'>🔐 Login Required</h3>
+            <div style='display: flex; justify-content: center; align-items: center; height: 75vh; flex-direction: column;'>
+                <h3 style='text-align:center; margin: 0.5rem 0;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
         password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")  # I’m collecting password
-        login_btn = st.button("Login", use_container_width=True)
 
+        login_btn = st.button("Login", use_container_width=True)
         if login_btn:
             if username == "Debasis" and password == "Baidya123":
                 st.session_state.authenticated = True  # I’m setting authentication flag
@@ -59,11 +59,17 @@ def generate_summary_and_output():
     response = ""
 
     # 📌 Centrally aligned action buttons below input
+    st.markdown("""
+        <div style='display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;'>
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns([1, 1], gap="large")
     with col1:
         generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)  # I’m triggering summary
     with col2:
         reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)  # I’m resetting app
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset:
         reset_all()
