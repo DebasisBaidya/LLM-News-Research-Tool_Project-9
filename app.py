@@ -28,7 +28,7 @@ def handle_authentication():
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
-                margin: 0 auto;
+                margin-top: -2rem;
                 padding: 1rem 2rem;
                 max-width: 400px;
                 background-color: #f9f9f9;
@@ -74,8 +74,8 @@ def generate_summary_and_output():
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    # ✅ Placing buttons side-by-side and centered
-    btn_col = st.columns([1, 1, 1])
+    # ✅ Placing buttons side-by-side and centered in a row
+    btn_col = st.columns([3, 4, 3])
     with btn_col[1]:
         col1, col2 = st.columns([1, 1])
         with col1:
@@ -92,7 +92,7 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            st.success(response[:1200] + ('...' if len(response) > 1200 else ''))
+            st.success(response)
 
             if 'history' not in st.session_state:
                 st.session_state.history = []
