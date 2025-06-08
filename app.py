@@ -9,8 +9,8 @@ import io
 # 🧱 Setting up the app layout
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
-    <h1 style='text-align: center;'>🧠 LLM: News Research Tool</h1>
-    <p style='text-align: center;'>Enter your query to summarize live news from the web</p>
+    <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
+    <p style='text-align: center; margin-top: 0;'>Summarize real-time news articles smartly using AI</p>
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
@@ -20,13 +20,15 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 70vh; flex-direction: column;'>
-                <h3 style='text-align:center;'>🔐 Login Required</h3>
+            <div style='display: flex; justify-content: center; align-items: center; height: 75vh; flex-direction: column;'>
+                <h3 style='text-align:center; margin-bottom: 1rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
         password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")  # I’m collecting password
-        if st.button("Login", use_container_width=True):
+        login_btn = st.button("Login", use_container_width=True)
+
+        if login_btn:
             if username == "Debasis" and password == "Baidya123":
                 st.session_state.authenticated = True  # I’m setting authentication flag
                 st.rerun()  # I’m rerunning to enter main app
@@ -44,24 +46,30 @@ def reset_all():
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 def generate_summary_and_output():
-    st.markdown("<div style='text-align:center'><h4>📌 Try queries like: 'India Election 2024', 'AI in Healthcare', 'Stock Market Crash'</h4></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
 
-    # 📌 Example buttons
+    # 📌 Example buttons in boxes and same size
     examples = ["India Election 2024", "AI in Healthcare", "Stock Market Crash", "Climate Change Effects"]
     cols = st.columns(len(examples))
     for i, example in enumerate(examples):
-        if cols[i].button(example):
-            st.session_state.query_input = example  # I’m setting example in input box
+        with cols[i]:
+            if st.button(example, use_container_width=True):
+                st.session_state.query_input = example  # I’m setting example in input box
 
-    query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact")  # I’m asking for query
+    query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")  # I’m asking for query
     response = ""
 
-    # 📌 Fully centered buttons below input
-    col1, col2 = st.columns([1, 1], gap="large")
-    with col1:
-        generate = st.button('⚡ Generate Summary', use_container_width=True)  # I’m triggering summary
-    with col2:
-        reset = st.button("🔄 Reset All", use_container_width=True)  # I’m resetting app
+    # 📌 Centrally aligned action buttons below input
+    st.markdown("""
+    <div style='display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;'>
+        <div style='flex:1'>
+    """, unsafe_allow_html=True)
+    generate = st.button('⚡ Generate Summary', key='generate_btn')  # I’m triggering summary
+    st.markdown("""
+        </div><div style='flex:1'>
+    """, unsafe_allow_html=True)
+    reset = st.button("🔄 Reset All", key='reset_btn')  # I’m resetting app
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
     if reset:
         reset_all()
@@ -70,7 +78,6 @@ def generate_summary_and_output():
         if query:
             summaries = get_summary(query)  # I’m fetching relevant news
             response = llm_chain.run({"query": query, "summaries": summaries})  # I’m generating smart summary
-            response = response[:800] + ("..." if len(response) > 800 else "")  # I’m trimming summary
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
             st.success(response)
