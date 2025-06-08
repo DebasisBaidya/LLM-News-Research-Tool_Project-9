@@ -9,8 +9,8 @@ import io
 # 🧱 Setting up the app layout
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
-    <h1 style='text-align: center; margin-bottom: 0.1rem;'>🧠 LLM: News Research Tool</h1>
-    <p style='text-align: center; margin: 0 0 1rem;'>Summarize real-time news articles smartly using AI</p>
+    <h1 style='text-align: center; margin-bottom: 0.2rem;'>🧠 LLM: News Research Tool</h1>
+    <p style='text-align: center; margin-top: -0.5rem; margin-bottom: 0.5rem;'>Summarize real-time news articles smartly using AI 🔐 Login Required</p>
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
@@ -19,9 +19,10 @@ def handle_authentication():
         st.session_state.authenticated = False  # I’m initializing login status
 
     if not st.session_state.authenticated:
+        # 🛂 Login Form Centered with Reduced Gap
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 65vh; flex-direction: column;'>
-                <h3 style='margin-bottom: 0.2rem;'>🔐 Login Required</h3>
+            <div style='display: flex; justify-content: center; align-items: center; height: 80vh; flex-direction: column;'>
+                <h3 style='margin-bottom: 0.5rem;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")  # I’m collecting username
@@ -60,14 +61,11 @@ def generate_summary_and_output():
 
     # 📌 Centrally aligned action buttons below input
     st.markdown("""
-        <div style='display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;'>
+        <div style='display: flex; justify-content: center; flex-direction: column; align-items: center; gap: 0.75rem; margin-top: 1rem;'>
     """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1, 1], gap="large")
-    with col1:
-        generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)  # I’m triggering summary
-    with col2:
-        reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)  # I’m resetting app
+    generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=False)  # I’m triggering summary
+    reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=False)  # I’m resetting app
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -80,7 +78,7 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})  # I’m generating smart summary
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            st.success(response[:1500] + ('...' if len(response) > 1500 else ''))  # I’m limiting long summary display
+            st.success(response[:1200] + ('...' if len(response) > 1200 else ''))  # I’m limiting long summary display
 
             if 'history' not in st.session_state:
                 st.session_state.history = []  # I’m initializing query history
