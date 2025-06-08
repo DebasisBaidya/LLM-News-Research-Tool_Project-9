@@ -9,16 +9,12 @@ from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
 
-# # ✅ Loading environment variables from .env file
-# load_dotenv()
+# ✅ Loading environment variables from .env file
+load_dotenv()
 
-# # ✅ Setting up API keys securely using os.getenv()
-# GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-# NEWS_API_KEY = os.getenv("NEWS_API_KEY")
-
-# Set API Keys
-GROQ_API_KEY = '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'
-NEWS_API_KEY= '0a84155d710b49c78edf28b293c3218f'
+# ✅ Setting up API keys securely using os.getenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 # ✅ Initializing Groq-based LLM
 # I’m connecting to Groq's Mixtral model which is powerful and free to use
