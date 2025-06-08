@@ -28,7 +28,7 @@ def handle_authentication():
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
-                margin-top: -2rem;
+                margin: 0 auto;
                 padding: 1rem 2rem;
                 max-width: 400px;
                 background-color: #f9f9f9;
