@@ -3,7 +3,7 @@
 
 [![Streamlit App](https://img.shields.io/badge/🚀%20Live%20App-Open%20in%20Browser-brightgreen?style=for-the-badge)](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge)](https://www.python.org/downloads/release/python-3130a1/)
-[![LangChain](https://img.shields.io/badge/LangChain%20+%20Groq-AI%20Backend-orange?style=for-the-badge)](https://www.langchain.com/)
+[![LangChain](https://img.shields.io/badge/LangChain%20+%20Groq-News%20API-orange?style=for-the-badge)](https://www.langchain.com/)
 
 </div>
 
