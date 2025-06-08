@@ -1,3 +1,19 @@
+# ✅ Phase 1: Environment Setup (Completed)
+# -----------------------------------------------------
+# 📌 Task 1.1: Install Required Libraries
+# - I’m installing the essential Python libraries to handle LLM logic, UI, and news scraping.
+# - The required libraries are: langchain, streamlit, newsapi-python, groq, and python-dotenv
+
+# ✅ Installation Command:
+# pip install langchain streamlit newsapi-python groq python-dotenv
+
+# 📌 Task 1.2: Obtain API Keys
+# - I’m generating the required API keys to access Groq’s LLM and NewsAPI.
+# - Getting Groq API key from: https://console.groq.com/keys
+# - Getting NewsAPI key from: https://newsapi.org/
+
+# 📌 Task 1.3: is in '.env' file
+
 # ✅ Phase 2: LangChain Configuration using Groq API
 # ----------------------------------------------------
 
