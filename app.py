@@ -20,7 +20,7 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div style='display: flex; justify-content: center; align-items: center; height: 60vh; flex-direction: column;'>
+            <div style='display: flex; justify-content: center; align-items: center; height: 70vh; flex-direction: column;'>
                 <h3 style='text-align:center;'>🔐 Login Required</h3>
         """, unsafe_allow_html=True)
 
@@ -37,7 +37,9 @@ def handle_authentication():
 
 # 📌 Function to reset session states
 def reset_all():
-    st.session_state.clear()  # I’m clearing the session state entirely
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]  # I’m removing session keys one by one
+    st.experimental_set_query_params()  # I’m resetting query params
     st.rerun()  # I’m rerunning app after reset
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
@@ -55,7 +57,7 @@ def generate_summary_and_output():
     response = ""
 
     # 📌 Fully centered buttons below input
-    col1, col2 = st.columns([1,1], gap="large")
+    col1, col2 = st.columns([1, 1], gap="large")
     with col1:
         generate = st.button('⚡ Generate Summary', use_container_width=True)  # I’m triggering summary
     with col2:
@@ -92,7 +94,10 @@ def generate_summary_and_output():
             for line in response.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
-            pdf_bytes = pdf.output(dest='S').encode('latin-1')  # I’m generating PDF as string
+            try:
+                pdf_bytes = pdf.output(dest='S').encode('latin-1')  # I’m generating PDF as string
+            except UnicodeEncodeError:
+                pdf_bytes = pdf.output(dest='S').encode('utf-8', errors='ignore')  # I’m fallback encoding to ignore
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
 
