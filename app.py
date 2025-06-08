@@ -28,7 +28,7 @@ def handle_authentication():
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
-                margin: 0 auto;
+                margin-top: -2rem;
                 padding: 1rem 2rem;
                 max-width: 400px;
                 background-color: #f9f9f9;
@@ -38,6 +38,7 @@ def handle_authentication():
             </style>
             <div class='login-container'>
                 <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
+                <p style='font-size: 14px; color: gray;'>Hint: Username - Debasis | Password - Baidya123</p>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
@@ -57,31 +58,38 @@ def handle_authentication():
 def reset_all():
     for key in list(st.session_state.keys()):
         del st.session_state[key]
-    st.rerun()
+    st.switch_page("/app.py")
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
 
-    # 📌 Example buttons in boxes and same size
+    # 📌 Example buttons in uniform size boxes
     examples = ["India Election 2024", "AI in Healthcare", "Stock Market Crash", "Climate Change Effects"]
-    cols = st.columns(len(examples))
+    st.markdown("""
+        <style>
+            .stButton > button {
+                width: 100% !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
-        with cols[i]:
+        with example_cols[i]:
             if st.button(example, use_container_width=True):
                 st.session_state.query_input = example
 
     query = st.text_input('🔍 Enter your Query', key='query_input', placeholder="e.g., Global Warming Impact", help="Try real-time topics like AI, politics, climate, finance")
     response = ""
 
-    # ✅ Placing buttons side-by-side and centered with auto-fitting rectangles
-    st.markdown("<div style='display:flex; justify-content:center; gap:1rem; margin-top:1rem;'>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
-    with col2:
-        reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # ✅ Placing buttons side-by-side and centered in a row
+    btn_col = st.columns([3, 4, 3])
+    with btn_col[1]:
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
+        with col2:
+            reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
 
     if reset:
         reset_all()
@@ -92,18 +100,25 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            st.write(response)  # ✅ Ensures full content shows without truncation
+            st.markdown(f"""
+                <div style='background-color: #e8f5e9; padding: 1rem; border-radius: 10px;'>
+                    {response}
+                </div>
+            """, unsafe_allow_html=True)
 
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, response))
 
-            st.download_button(
-                label="📥 Download as TXT",
-                data=response,
-                file_name="summary.txt",
-                mime="text/plain"
-            )
+            download_col = st.columns([1, 1])
+            with download_col[0]:
+                st.download_button(
+                    label="📅 Download as TXT",
+                    data=response,
+                    file_name="summary.txt",
+                    mime="text/plain",
+                    use_container_width=True
+                )
 
             pdf = FPDF()
             pdf.add_page()
@@ -118,12 +133,14 @@ def generate_summary_and_output():
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
 
-            st.download_button(
-                label="📄 Download as PDF",
-                data=pdf_output,
-                file_name="summary.pdf",
-                mime="application/pdf"
-            )
+            with download_col[1]:
+                st.download_button(
+                    label="📄 Download as PDF",
+                    data=pdf_output,
+                    file_name="summary.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
         else:
             st.warning("Please enter a query to get the summary.")
     return query, response
