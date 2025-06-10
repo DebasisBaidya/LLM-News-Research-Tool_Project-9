@@ -104,10 +104,3 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 > ✨ Built for smart research and crisp insights using real-time LLMs.
 ```
-
----
-
-### ✅ Final Steps for You:
-
-* Replace `https://your-screenshot-link.com` and `https://your-demo-link.com` as needed.
-* Paste the content above into your `README.md` file.
