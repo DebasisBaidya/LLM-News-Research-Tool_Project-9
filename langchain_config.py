@@ -58,7 +58,7 @@ prompt = PromptTemplate(template=initial_template, input_variables=["query"])
 llm_chain = LLMChain(prompt=prompt, llm=llm)
 
 # ✅ Initializing NewsAPI client to fetch real-time news articles
-newsapi = NewsApiClient(api_key=NEWS_API_KEY)
+newsapi = NewsApiClient(api_key=news_api_key)
 
 def get_news_articles(query):
     # ✅ Using NewsAPI to fetch relevant news articles based on user input
