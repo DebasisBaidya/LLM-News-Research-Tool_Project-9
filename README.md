@@ -69,15 +69,15 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 ## 📸 App Preview
 
-> _Replace this placeholder with a real screenshot_
+> _Screenshot of Log In & Main App Page_
 
 ## 📸 App Preview
 
 <div style="display: flex; gap: 10px;">
 
-  <img src="screenshot1.png" alt="Screenshot 1" width="45%" />
+  <img src="screenshot 1.png" alt="Screenshot 1" width="45%" />
   
-  <img src="screenshot2.png" alt="Screenshot 2" width="45%" />
+  <img src="screenshot 2.png" alt="Screenshot 2" width="45%" />
 
 </div>
 
