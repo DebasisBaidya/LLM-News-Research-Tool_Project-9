@@ -25,7 +25,7 @@ from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
 # ✅ Loading environment variables from .env file
-# load_dotenv()
+load_dotenv()
 
 # ✅ Setting up API keys securely using os.getenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
