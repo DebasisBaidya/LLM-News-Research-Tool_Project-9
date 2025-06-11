@@ -33,4 +33,4 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
-        run: streamlit run app.py --server.port 8501 --server.headless true
+        run: streamlit run app.py
