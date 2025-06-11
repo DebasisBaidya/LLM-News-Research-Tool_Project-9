@@ -13,6 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List files for debug
+        run: ls -la
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -25,4 +28,4 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
-        run: python langchain_config.py
+        run: python app.py
