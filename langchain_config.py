@@ -34,7 +34,7 @@ news_api_key = st.secrets["NEWS_API_KEY"]
 
 # ✅ Initializing Groq-based LLM
 # I’m connecting to Groq's LLaMA3 model (powerful, fast, free to use)
-llm = ChatGroq(groq_api_key=GROQ_API_KEY, model_name="llama3-70b-8192")
+llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 
 # ✅ 🧠 Prompt Template with Crisp Bullet Output
 initial_template = """
