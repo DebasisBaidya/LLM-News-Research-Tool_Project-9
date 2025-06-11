@@ -73,13 +73,19 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 ## 📸 App Preview
 
-<div style="display: flex; gap: 10px;">
-
-  <img src="Screenshot 1.png" alt="Screenshot 1" width="45%" />
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
   
-  <img src="Screenshot 2.png" alt="Screenshot 2" width="45%" />
+  <!-- Empty spacer -->
+  <div style="flex: 1;"></div>
+  
+  <!-- Screenshot 1 centered -->
+  <img src="Screenshot 1.png" alt="Screenshot 1" style="width: 30%; margin: 0 auto;" />
+  
+  <!-- Screenshot 2 aligned right -->
+  <img src="Screenshot 2.png" alt="Screenshot 2" style="width: 45%;" />
 
 </div>
+
 
 ---
 
