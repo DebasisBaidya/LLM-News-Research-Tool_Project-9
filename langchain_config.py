@@ -12,7 +12,7 @@
 # - Getting Groq API key from: https://console.groq.com/keys
 # - Getting NewsAPI key from: https://newsapi.org/
 
-# 📌 Task 1.3: is in '.env' file
+# 📌 Task 1.3: is in 'Streamlit Secret TOML' file
 
 # ✅ Phase 2: LangChain Configuration using Groq API
 # ----------------------------------------------------
@@ -25,11 +25,11 @@ from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
 # ✅ Loading environment variables from .env file
-load_dotenv()
+#load_dotenv()
 
-# ✅ Setting up API keys securely using os.getenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+# ✅ Access secrets via st.secrets or os.environ
+groq_api_key = st.secrets["GROQ_API_KEY"]
+news_api_key = st.secrets["NEWS_API_KEY"]
 
 # ✅ Initializing Groq-based LLM
 # I’m connecting to Groq's LLaMA3 model (powerful, fast, free to use)
