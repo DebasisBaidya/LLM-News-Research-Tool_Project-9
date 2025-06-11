@@ -75,9 +75,9 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 <div style="display: flex; gap: 10px;">
 
-  <img src="screenshot 1.png" alt="Screenshot 1" width="45%" />
+  <img src="Screenshot 1.png" alt="Screenshot 1" width="45%" />
   
-  <img src="screenshot 2.png" alt="Screenshot 2" width="45%" />
+  <img src="Screenshot 2.png" alt="Screenshot 2" width="45%" />
 
 </div>
 
