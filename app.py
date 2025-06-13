@@ -5,6 +5,7 @@ import pandas as pd
 from langchain_config import get_summary
 from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
 import io
+import re
 
 # ⚙️ I’m setting up the app layout and title
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
@@ -15,8 +16,20 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# 🧽 Remove emojis (for PDF export safety)
+def remove_emojis(text):
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport
+        u"\U0001F1E0-\U0001F1FF"  # flags
+        u"\u2600-\u2B55"          # miscellaneous
+        u"\u200d"                 # zero width joiners
+        u"\u23cf" u"\ufe0f" u"\u3030"
+    "]+", flags=re.UNICODE)
+    return emoji_pattern.sub(r'', text)
+
 # 📌 Task 7.1: Add User Authentication
-# 🔐 I’m creating a simple login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -65,7 +78,6 @@ def reset_all():
     st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
-# 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
@@ -91,15 +103,11 @@ def generate_summary_and_output():
 
     if gen_btn:
         if query:
-            # 🔗 I’m calling my summarization logic from langchain_config
+            # 🔗 Calling summarization logic
             response, articles = get_summary(query)
 
             # ✅ Summary Section
-            st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            intro_line = "Here is a factual and unbiased summary of the situation:"
-            if intro_line in response:
-                response = response.replace(intro_line, "").strip()
-
+            st.markdown("### 🧠 AI-Generated News Summary:")
             formatted_response = "\n".join([
                 f"- {line.strip()}" for line in response.split("•") if line.strip()
             ])
@@ -108,7 +116,7 @@ def generate_summary_and_output():
             # ✅ Articles Section
             articles_text = ""
             if articles:
-                st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
+                st.markdown("### 📰 Articles Used for Summary:")
                 for i, article in enumerate(articles, 1):
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
@@ -116,38 +124,37 @@ def generate_summary_and_output():
                     url = article.get("url", "#")
                     article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
                     st.markdown(article_block)
-                    articles_text += f"{article_block}\n"
+                    articles_text += f"{article_block}\n\n"
 
                 st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
-            # 💾 I’m saving the result in history for reference
+            # 💾 Save in session history
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # 💡 Show Download options (TXT + PDF)
+            # 📥 Download Options (TXT + PDF)
             combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
-
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
 
+            # 📥 TXT
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
+            # 📄 PDF (cleaned)
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
-            for line in combined_output.split("\n"):
+            for line in remove_emojis(combined_output).split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
-            try:
-                pdf_bytes = pdf.output(dest="S").encode("latin-1")
-            except UnicodeEncodeError:
-                pdf_bytes = pdf.output(dest="S").encode("utf-8", errors="ignore")
+            pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
+
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
