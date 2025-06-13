@@ -174,6 +174,7 @@ def generate_summary_and_output():
                     <div style='background-color:#e6ffe6; border-radius:6px; padding:0.5rem; margin-top:1rem; text-align:center;'>
                         <span style='color: #2e7d32; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
                     </div>
+                    <div style='margin-bottom: 1rem;'></div>
                 """, unsafe_allow_html=True)
             else:
                 st.warning("⚠️ No articles available.")
