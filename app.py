@@ -57,6 +57,15 @@ def handle_authentication():
         st.markdown("</div>", unsafe_allow_html=True)
         st.stop()
 
+# 📌 Task 7.3: View past searches
+def show_history():
+    if 'history' in st.session_state and st.session_state.history:
+        st.markdown("---")
+        st.subheader("📚 Past Queries")
+        for idx, (q, r) in enumerate(reversed(st.session_state.history[-5:]), 1):
+            st.markdown(f"**{idx}. {q}**")
+            st.markdown(f"> {r[:200]}...")
+
 # ♻️ Creating a reset function to clear session except login info
 def reset_all():
     preserved_keys = {'authenticated'}
@@ -71,7 +80,6 @@ def create_pdf(text_data):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
-
     textobject = c.beginText()
     textobject.setTextOrigin(inch * 1, height - inch * 1)
     textobject.setFont("Helvetica", 12)
@@ -126,7 +134,6 @@ def generate_summary_and_output():
         if query:
             response, articles = get_summary(query)
             bullet_lines = [f"• {line.strip()}" for line in response.split("•") if line.strip()]
-
             header_line = bullet_lines[0][1:].strip() if bullet_lines else ""
             formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
 
@@ -149,7 +156,8 @@ def generate_summary_and_output():
             if articles:
                 st.markdown("<h3 style='text-align:center;'>📰 Articles Used for Summary</h3>", unsafe_allow_html=True)
                 st.markdown(f"""
-                    <div style='background-color:#f5f5f5; padding: 1rem; border-radius: 6px;'>
+                    <div style='background-color:#fdfdfd; border: 1px solid #ddd; padding: 1rem; border-radius: 6px;'>
+                        <div style='margin-bottom: 1rem;'>
                 """, unsafe_allow_html=True)
                 top_articles = articles[:3]
                 for article in top_articles:
@@ -161,9 +169,10 @@ def generate_summary_and_output():
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
                 st.markdown("""
-                    </div>
-                    <div style='text-align:center; margin-top: 0.5rem;'>
-                        <span style='color: green; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
+                        </div>
+                        <div style='text-align:center; padding-top: 0.5rem;'>
+                            <span style='color: green; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
+                        </div>
                     </div>
                 """, unsafe_allow_html=True)
             else:
@@ -184,15 +193,6 @@ def generate_summary_and_output():
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
         else:
             st.warning("⚠️ Please enter a query first.")
-
-# 📌 Task 7.3: View past searches
-def show_history():
-    if 'history' in st.session_state and st.session_state.history:
-        st.markdown("---")
-        st.subheader("📚 Past Queries")
-        for idx, (q, r) in enumerate(reversed(st.session_state.history[-5:]), 1):
-            st.markdown(f"**{idx}. {q}**")
-            st.markdown(f"> {r[:200]}...")
 
 # 🚀 Running the full app
 handle_authentication()
