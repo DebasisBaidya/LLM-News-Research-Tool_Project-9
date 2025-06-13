@@ -98,12 +98,12 @@ def generate_summary_and_output():
 
             st.markdown("### 🧠 AI-Generated News Summary:")
 
-            # 🔍 I’m separating heading and bullet points if header line exists
-            if "Here is a factual and unbiased summary of the situation:" in response:
-                st.markdown("> **Here is a factual and unbiased summary of the situation:**")
-                _, bullet_text = response.split("Here is a factual and unbiased summary of the situation:", 1)
-            else:
-                bullet_text = response
+    # 🔍 I’m separating heading and bullet points if header line exists
+    if "Here is a factual and unbiased summary of the situation:" in response:
+        st.markdown("> **Here is a factual and unbiased summary of the situation:**")
+        _, bullet_text = response.split("Here is a factual and unbiased summary of the situation:", 1)
+    else:
+        bullet_text = response
 
 formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
 st.success(formatted_response)
