@@ -65,6 +65,7 @@ def reset_all():
     st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
+# 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
@@ -76,6 +77,7 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
+    # 💡 Buttons below the query field
     st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
@@ -92,19 +94,19 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format bullet + subpoint
-            formatted_response = ""
-            for point in response.split("•"):
-                if point.strip():
-                    if " - " in point:
-                        main, sub = point.strip().split(" - ", 1)
-                        formatted_response += f"• **{main.strip()}**\n    - {sub.strip()}\n"
-                    else:
-                        formatted_response += f"• {point.strip()}\n"
-
-            # ✅ Display AI summary
+            # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            st.success(formatted_response)
+
+            # 🧾 Format response: bold bullet ➤ subpoint
+            formatted_response = ""
+            for line in response.split("•"):
+                if line.strip():
+                    parts = line.strip().split(" - ", 1)
+                    if len(parts) == 2:
+                        formatted_response += f"**➤ {parts[0].strip()}**\n- {parts[1].strip()}\n\n"
+                    else:
+                        formatted_response += f"- {parts[0].strip()}\n\n"
+            st.success(formatted_response.strip())
 
             # ✅ Articles Section
             articles_text = ""
@@ -117,35 +119,35 @@ def generate_summary_and_output():
                     url = article.get("url", "#")
                     article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
                     st.markdown(article_block)
-                    articles_text += f"{article_block}\n"
+                    articles_text += f"{title}\n📅 {date} | 🏷️ {source}\n🔗 {url}\n\n"
 
                 st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
-            # 💾 Save to history
+            # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # 📦 Combine output for export
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
+            # 💡 Show Download options (TXT + PDF)
+            combined_output = f"🧠 AI-Generated News Summary:\n\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n\n{articles_text.strip()}"
 
-            # 💡 Export to TXT and PDF
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
 
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
+            # 🧾 PDF Export with encoding fix
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
             for line in combined_output.split("\n"):
                 try:
-                    pdf.multi_cell(0, 10, line.encode("latin-1", errors="replace").decode("latin-1"))
-                except Exception:
-                    pdf.multi_cell(0, 10, "[Error Encoding Line]")
+                    pdf.multi_cell(0, 10, line.encode("latin-1", "replace").decode("latin-1"))
+                except:
+                    pdf.multi_cell(0, 10, "[Encoding Error]")
             pdf_output = io.BytesIO()
             pdf_bytes = pdf.output(dest="S").encode("latin-1")
             pdf_output.write(pdf_bytes)
