@@ -68,7 +68,7 @@ def reset_all():
 # 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
-    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
+    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
@@ -94,15 +94,11 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary as plain bullet points with paragraph spacing
-            formatted_response = ""
-            for point in response.split("•"):
-                point = point.strip()
-                if point:
-                    formatted_response += f"• {point}\n\n"
-
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
+            formatted_response = "\n".join([
+                f"- {line.strip()}" for line in response.split("•") if line.strip()
+            ])
             st.success(formatted_response)
 
             # ✅ Articles Section
@@ -114,7 +110,7 @@ def generate_summary_and_output():
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 {url}"
+                    article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
 
@@ -136,21 +132,20 @@ def generate_summary_and_output():
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
-            # ✅ PDF Export with Unicode font
             pdf = FPDF()
             pdf.add_page()
-            pdf.add_font("DejaVu", "", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
-            pdf.set_font("DejaVu", size=12)
+            pdf.set_font("Arial", size=12)
             for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
-            pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
+            try:
+                pdf_bytes = pdf.output(dest="S").encode("latin-1")
+            except UnicodeEncodeError:
+                pdf_bytes = pdf.output(dest="S").encode("utf-8", errors="ignore")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
-
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
-
             st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
