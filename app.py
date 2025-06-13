@@ -111,7 +111,7 @@ def generate_summary_and_output():
         </style>
         <div style='text-align:center'><h4>📌 Try queries like:</h4></div>
     """, unsafe_allow_html=True)
-    examples = ["Air India Crash", "India Pak War", "Indian Economy", "POK Issues"]
+    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
@@ -120,7 +120,7 @@ def generate_summary_and_output():
                 st.session_state.query_input = example
             st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='text-align:center'><h4>🔍 Enter your Query</h4></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; margin-top: 1rem;'><h4>🔍 Enter your Query</h4></div>", unsafe_allow_html=True)
     query = st.text_area("", key="query_input", height=100, label_visibility="collapsed")
 
     col1, col2 = st.columns(2)
