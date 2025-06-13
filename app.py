@@ -94,19 +94,22 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary
+            # ✅ Format AI summary (• **Main ➤** Sub)
             formatted_response = ""
             for point in response.split("•"):
                 if point.strip():
-                    if " - " in point:
+                    if "➤" in point:
+                        main, sub = point.strip().split("➤", 1)
+                        formatted_response += f"• **{main.strip()} ➤** {sub.strip()}\n\n"
+                    elif " - " in point:
                         main, sub = point.strip().split(" - ", 1)
-                        formatted_response += f"• **{main.strip()}**\n    ➤ {sub.strip()}\n"
+                        formatted_response += f"• **{main.strip()} ➤** {sub.strip()}\n\n"
                     else:
-                        formatted_response += f"• {point.strip()}\n"
+                        formatted_response += f"• {point.strip()}\n\n"
 
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            st.success(formatted_response)
+            st.success(formatted_response.strip())
 
             # ✅ Articles Section
             articles_text = ""
@@ -117,7 +120,7 @@ def generate_summary_and_output():
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 {url}"
+                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 [Read More]({url})"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
 
@@ -128,10 +131,10 @@ def generate_summary_and_output():
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
                 st.session_state.history = []
-            st.session_state.history.append((query, formatted_response))
+            st.session_state.history.append((query, formatted_response.strip()))
 
             # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
+            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
