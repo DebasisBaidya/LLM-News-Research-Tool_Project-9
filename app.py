@@ -96,9 +96,21 @@ def generate_summary_and_output():
 
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            formatted_response = "\n".join([
-                f"- {line.strip()}" for line in response.split("•") if line.strip()
-            ])
+            intro_line = "Here is a factual and unbiased summary of the situation:"
+            if intro_line in response:
+                response = response.replace(intro_line, "").strip()
+
+            # 🧠 Format summary with bold main points and indented subpoints
+            formatted_response = ""
+            for point in response.split("•"):
+                if point.strip():
+                    if "–" in point or "-" in point:
+                        parts = point.strip().split("–", 1) if "–" in point else point.strip().split("-", 1)
+                        main = parts[0].strip()
+                        sub = parts[1].strip() if len(parts) > 1 else ""
+                        formatted_response += f"• **{main}**\n    - {sub}\n"
+                    else:
+                        formatted_response += f"• **{point.strip()}**\n"
             st.success(formatted_response)
 
             # ✅ Articles Section
