@@ -136,7 +136,7 @@ def generate_summary_and_output():
         if query:
             response, articles = get_summary(query)
             bullet_lines = [f"• {line.strip()}" for line in response.split("•") if line.strip()]
-            header_line = bullet_lines[0][1:].strip() if bullet_lines else ""
+            header_line = articles[0].get("title", "Top News") if articles else ""
             formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
 
             st.markdown(f"""
