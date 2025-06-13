@@ -17,6 +17,9 @@
 # ✅ Phase 2: LangChain Configuration using Groq API
 # ----------------------------------------------------
 
+
+# ✅ Setting up Environment and API Integration
+# -----------------------------------------------------
 # 📌 I am importing necessary modules and loading environment variables
 
 import os
@@ -60,9 +63,9 @@ newsapi = NewsApiClient(api_key=news_api_key)
 
 # ✅ I am defining a function to fetch current articles based on the user's query
 def get_news_articles(query):
-    # 🔍 I am requesting the latest articles sorted by publication date
-    articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
-
+    # 🔍 I am requesting the latest articles sorted by publication date and title match
+    articles = newsapi.get_everything(qInTitle=query, language='en', sort_by='publishedAt', page_size=10)
+    
     # ✅ I am showing a warning if no articles are found
     if not articles['articles']:
         st.warning("⚠️ No current articles found for this query. Try with another trending topic.")
@@ -82,9 +85,10 @@ def summarize_articles(articles):
         if article.get('description') or article.get('content')
     ]
 
-    # ⚠️ I am checking and warning if summaries are still empty
-    if not summaries:
-        st.warning("⚠️ No usable content found in fetched articles.")
+    if summaries:
+        st.success(f"✅ Found {len(summaries)} usable article descriptions.")
+    else:
+        st.error("❌ No summary content could be extracted.")
 
     return ' '.join(summaries)
 
@@ -92,11 +96,14 @@ def summarize_articles(articles):
 def get_summary(query):
     # 📰 I am fetching news articles for the given query
     articles = get_news_articles(query)
-
+    
     # 🧾 I am combining descriptions or content into one long text
     summaries = summarize_articles(articles)
-
+    
     # 🤖 I am running the enhanced prompt through the LLM to get the summary
+    if not summaries.strip():
+        return "⚠️ No content was found in the news articles to summarize. Please try a different or broader topic."
+
     return llm_chain.run(query=query, summaries=summaries)
 
 
