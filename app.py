@@ -111,7 +111,7 @@ def generate_summary_and_output():
         </style>
         <div style='text-align:center'><h4>📌 Try queries like:</h4></div>
     """, unsafe_allow_html=True)
-    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "POK Issues"]
+    examples = ["Air India Crash", "India Pak War", "Indian Economy", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
