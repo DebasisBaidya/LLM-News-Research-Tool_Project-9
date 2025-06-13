@@ -24,14 +24,16 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
+# ✅ Phase 1: API Integration
 # 🔐 Loading API keys from Streamlit secrets
 groq_api_key = st.secrets["GROQ_API_KEY"]
 news_api_key = st.secrets["NEWS_API_KEY"]
 
-# ✅ Initializing Groq LLM with LLaMA3
+# ✅ Phase 2: Model Initialization
+# 🧠 Initializing Groq’s LLaMA3 model
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 
-# ✅ Creating a richer, detailed prompt for factual AI summarization
+# ✅ Phase 3.1: Enhanced Prompt Template for Detailed Summaries
 enhanced_template = """
 You are a highly factual AI news summarizer.
 
@@ -58,23 +60,24 @@ Do NOT make anything up — base everything strictly on the provided content.
 📌 Provide the final bullet-point summary below:
 """
 
-# Creating prompt template
+# 🎯 Prompt template with required input variables
 enhanced_prompt = PromptTemplate(template=enhanced_template, input_variables=["query", "summaries"])
 
-# Creating the LLM chain
+# 🔗 LLMChain that links the prompt and model
 llm_chain = LLMChain(prompt=enhanced_prompt, llm=llm)
 
-# ✅ Initializing NewsAPI client
+# ✅ Phase 3.2: News Fetching
+# 📡 Initializing NewsAPI client
 newsapi = NewsApiClient(api_key=news_api_key)
 
-# ✅ Fetching news articles using query
+# 🔍 Fetching articles using the query
 def get_news_articles(query):
     articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
     if not articles['articles']:
         st.warning("⚠️ No current articles found for this query.")
     return articles['articles']
 
-# ✅ Extracting usable summaries from articles
+# 🧾 Extracting summary content
 def summarize_articles(articles):
     summaries = [
         article.get('description') or article.get('content') or ''
@@ -82,7 +85,8 @@ def summarize_articles(articles):
     ]
     return ' '.join(summaries)
 
-# ✅ Final function to display metadata and run summarization
+# ✅ Phase 3.3: Final Summary Output
+# 📋 Generating summary + article info
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
@@ -91,10 +95,10 @@ def get_summary(query):
         st.error("❌ No summary content could be extracted.")
         return "⚠️ No content found to summarize. Try another topic."
 
-    # 📰 Show metadata of articles used
     used_articles = [article for article in articles if article.get('description') or article.get('content')]
-    st.markdown("### 📰 Articles Used for Summary:")
 
+    # 📄 Show article metadata
+    st.markdown("### 📰 Articles Used for Summary:")
     for i, article in enumerate(used_articles, 1):
         title = article.get("title", "No Title Found")
         source = article.get("source", {}).get("name", "Unknown Source")
@@ -102,12 +106,13 @@ def get_summary(query):
         url = article.get("url", "#")
         st.markdown(f"- {i}. **{title}**  \n📅 {published} | 🏷️ {source}  \n🔗 [Read More]({url})")
 
-    # ✅ Show summary metadata
+    # ✅ Show stats
     sentence_count = len([s for s in summaries.split('.') if s.strip()])
     st.markdown(f"✅ **Summary extracted from {len(used_articles)} article(s) with approx. {sentence_count} sentence(s).**")
 
-    # 🤖 Return LLM-generated summary
+    # 🤖 Generate and return the bullet-point summary
     return llm_chain.run(query=query, summaries=summaries)
+
 
 
 # ✅ Outcome:
