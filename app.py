@@ -8,6 +8,12 @@ import io
 
 # ⚙️ I’m setting up the app layout and title
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
+st.markdown("""
+    <div style='display: flex; flex-direction: column; align-items: center; margin-top: 2rem;'>
+        <h1 style='text-align: center;'>🧠 LLM: News Research Tool</h1>
+        <p style='text-align: center;'>Summarizing real-time news articles smartly using AI 🔐 Login Required</p>
+    </div>
+""", unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
 # 🔐 I’m creating a simple login form to restrict access
@@ -16,17 +22,37 @@ def handle_authentication():
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
-        st.markdown("### 🔐 Login Required")
-        st.info("Use **Debasis** / **Baidya123** to log in.")
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
+        st.markdown("""
+            <style>
+            .login-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin: 0 auto;
+                padding: 1rem 2rem;
+                max-width: 400px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            </style>
+            <div class='login-container'>
+                <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
+                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
+        """, unsafe_allow_html=True)
+
+        username = st.text_input("Username", placeholder="Try: Debasis", key="username")
+        password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
 
         if st.button("Login", use_container_width=True):
             if username == "Debasis" and password == "Baidya123":
                 st.session_state.authenticated = True
                 st.rerun()
             else:
-                st.error("❌ Incorrect credentials.")
+                st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
+
+        st.markdown("</div>", unsafe_allow_html=True)
         st.stop()
 
 # ♻️ I’m creating a reset function that clears session except login info
@@ -41,10 +67,7 @@ def reset_all():
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 # 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
-    st.markdown("### 🧠 LLM: News Research Tool")
-    st.markdown("Get concise summaries of current events using AI.")
-
-    st.markdown("##### 📌 Try queries like:")
+    st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
@@ -54,11 +77,14 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
+    # 💡 Buttons below the query field
+    st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         gen_btn = st.button("⚡ Generate Summary", use_container_width=True)
     with col2:
         reset_btn = st.button("🔄 Reset All", use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset_btn:
         reset_all()
@@ -72,15 +98,14 @@ def generate_summary_and_output():
             formatted_response = ""
             for point in response.split("•"):
                 if point.strip():
-                    formatted_response += f"• {point.strip()}\n"
-
-            formatted_response = formatted_response.strip().replace("\n", "\n\n")
+                    formatted_response += f"• {point.strip()}\n\n"
+            formatted_response = formatted_response.strip()
 
             # ✅ Summary Section
             st.markdown("### 🧠 AI-Generated News Summary:")
             st.success(formatted_response)
 
-            # ✅ Articles Section (Top 3)
+            # ✅ Articles Section (Top 3 only)
             articles_text = ""
             if articles:
                 st.markdown("### 📰 Articles Used for Summary:")
@@ -104,7 +129,9 @@ def generate_summary_and_output():
             # 💡 Show Download options (TXT + PDF)
             combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
 
+            st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
+
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
@@ -121,6 +148,8 @@ def generate_summary_and_output():
 
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
+
+            st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
 
