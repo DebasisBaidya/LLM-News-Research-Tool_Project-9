@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from langchain_config import get_summary  # ✅ Now returns summary and articles
+from langchain_config import get_summary
 from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
 import io
 
@@ -16,6 +16,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
+# 🔐 I’m creating a simple login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -90,38 +91,36 @@ def generate_summary_and_output():
 
     if gen_btn:
         if query:
-            # 🔗 Get summary and related articles
+            # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
+            # ✅ Summary Section
             st.markdown("### 🧠 AI-Generated News Summary:")
-
-            # 🧾 Cleanly separate bullet points from any intro sentence
             intro_line = "Here is a factual and unbiased summary of the situation:"
             if intro_line in response:
                 response = response.replace(intro_line, "").strip()
 
-            # ✅ Format bullet points cleanly
             formatted_response = "\n".join([
                 f"- {line.strip()}" for line in response.split("•") if line.strip()
             ])
-
-            # 🧠 Show formatted bullet list (without showing the intro line again)
             st.success(formatted_response)
 
-            # 📰 Show article metadata
-            st.markdown("### 📰 Articles Used for Summary:")
+            # ✅ Articles Section
             if articles:
+                st.markdown("### 📰 Articles Used for Summary:")
                 for i, article in enumerate(articles, 1):
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
                     st.markdown(f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})")
-                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
-            else:
-                st.warning("No articles found for this topic.")
 
-            # 💾 Save in history
+                sentence_count = len([s for s in response.split('.') if s.strip()])
+                st.success(f"✅ Summary extracted from {len(articles)} article(s) with approx. {sentence_count} sentence(s).")
+            else:
+                st.warning("⚠️ No articles available.")
+
+            # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
