@@ -95,7 +95,7 @@ def generate_summary_and_output():
             response, articles = get_summary(query)
 
             # ✅ Summary Section
-            st.markdown("### 🧠 AI-Generated News Summary:")
+            st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
             intro_line = "Here is a factual and unbiased summary of the situation:"
             if intro_line in response:
                 response = response.replace(intro_line, "").strip()
@@ -107,16 +107,15 @@ def generate_summary_and_output():
 
             # ✅ Articles Section
             if articles:
-                st.markdown("### 📰 Articles Used for Summary:")
+                st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
                 for i, article in enumerate(articles, 1):
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
                     st.markdown(f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})")
-
-                sentence_count = len([s for s in response.split('.') if s.strip()])
-                st.success(f"✅ Summary extracted from {len(articles)} article(s) with approx. {sentence_count} sentence(s).")
+                
+                st.success(f"✅ Summary extracted from {len(articles)} article(s)).")
             else:
                 st.warning("⚠️ No articles available.")
 
