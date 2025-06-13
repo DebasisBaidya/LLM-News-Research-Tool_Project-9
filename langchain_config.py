@@ -17,35 +17,37 @@
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
 import os
-import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
-# ✅ Phase 1: API Integration
-# 🔐 Loading API keys from Streamlit secrets
-groq_api_key = st.secrets["GROQ_API_KEY"]
-news_api_key = st.secrets["NEWS_API_KEY"]
+# 📌 Task 1.1: Load Environment Variables
+# 🔐 Load API keys securely from .env or Streamlit Secrets
+load_dotenv()
+groq_api_key = os.getenv("GROQ_API_KEY")
+news_api_key = os.getenv("NEWS_API_KEY")
 
-# ✅ Phase 2: Model Initialization
-# 🧠 Initializing Groq’s LLaMA3 model
+# 📌 Task 2.1: Initialize the Language Model
+# 🧠 Connecting to Groq's LLaMA3 model
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 
-# ✅ Phase 3.1: Enhanced Prompt Template for Detailed Summaries
+# 📌 Task 3.1: Design Prompt Template
+# ✏️ This prompt ensures clear, fact-based summaries without fluff
 enhanced_template = """
-You are a highly factual AI news summarizer.
+You are an intelligent and strictly factual AI news summarizer.
 
-Using the provided real-time news article content and user query, generate a clear and informative summary of the current situation.
+Given a user query and a set of real-time news article excerpts,
+generate an accurate, concise summary of the situation.
 
-✅ The summary should:
-- Be factually accurate and unbiased
-- Contain 4 to 6 bullet points
-- Use • as the bullet symbol
-- Avoid repetition of query or intro/closing sentences
-
-Do NOT make anything up — base everything strictly on the provided content.
+✅ Summary Guidelines:
+• Be strictly factual and free of bias
+• Cover key developments and details
+• Provide 4 to 6 bullet points only
+• Use the • bullet symbol consistently
+• Avoid restating the query or adding an intro/outro
+• NEVER invent or speculate — rely strictly on article data
 
 ---
 
@@ -60,45 +62,40 @@ Do NOT make anything up — base everything strictly on the provided content.
 📌 Provide only the final bullet-point summary below:
 """
 
-# 🎯 Prompt template with required input variables
-enhanced_prompt = PromptTemplate(template=enhanced_template, input_variables=["query", "summaries"])
+# 📌 Task 3.1.2: Compile Prompt Template
+prompt = PromptTemplate(template=enhanced_template, input_variables=["query", "summaries"])
 
-# 🔗 LLMChain that links the prompt and model
-llm_chain = LLMChain(prompt=enhanced_prompt, llm=llm)
+# 🔗 Create LLMChain with model and prompt
+llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-# ✅ Phase 3.2: News Fetching
-# 📡 Initializing NewsAPI client
+# 📌 Task 3.2: Setup NewsAPI
+# 🌐 Fetch news articles via keyword search
 newsapi = NewsApiClient(api_key=news_api_key)
 
-# 🔍 Fetching articles using the query
 def get_news_articles(query):
     articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
-    if not articles['articles']:
-        st.warning("⚠️ No current articles found for this query.")
-    return articles['articles']
+    return articles.get("articles", [])
 
-# 🧾 Extracting summary content
+# 📌 Task 3.2.1: Combine article content into a string
+# 🧾 Extract description or content from each article
 def summarize_articles(articles):
-    summaries = [
+    return ' '.join(
         article.get('description') or article.get('content') or ''
-        for article in articles if article.get('description') or article.get('content')
-    ]
-    return ' '.join(summaries)
+        for article in articles
+    )
 
-# ✅ Phase 3.3: Final Summary Output
-# 📋 Generating summary + article info
+# 📌 Task 3.3: Summarization Entry Point
+# 🧠 Return a summary and metadata for use in the UI
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
 
     if not summaries.strip():
-        st.error("❌ No summary content could be extracted.")
         return "⚠️ No content found to summarize. Try another topic.", []
 
-    used_articles = [article for article in articles if article.get('description') or article.get('content')]
-
-    # 🤖 Generate and return the bullet-point summary and article metadata
+    used_articles = [a for a in articles if a.get('description') or a.get('content')]
     summary_output = llm_chain.run(query=query, summaries=summaries)
+
     return summary_output, used_articles
 
 
