@@ -3,10 +3,10 @@
 import streamlit as st
 import pandas as pd
 from langchain_config import get_summary
-from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
+from fpdf import FPDF  # 🧾 Using FPDF for PDF generation
 import io
 
-# ⚙️ I’m setting up the app layout and title
+# ⚙️ Setting up the app layout and title
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
     <div style='display: flex; flex-direction: column; align-items: center; margin-top: 2rem;'>
@@ -15,16 +15,18 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 📌 Task 7.1: Add User Authentication
-# 🔐 I’m creating a simple login form to restrict access
+# 📌 Task 7.1: Adding User Authentication
+# 🔐 Creating a styled login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
         with st.container():
-            st.markdown("<h3 style='text-align:center;'>🔐 Login Required</h3>", unsafe_allow_html=True)
-            st.caption("Username: Debasis | Password: Baidya123")
+            st.markdown("""<div style='text-align:center;'>
+                <h3>🔐 Login Required</h3>
+                <p style='font-size:14px;'>Username: <b>Debasis</b> | Password: <b>Baidya123</b></p>
+            </div>""", unsafe_allow_html=True)
 
             username = st.text_input("Username", placeholder="Try: Debasis", key="username")
             password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
@@ -38,7 +40,7 @@ def handle_authentication():
 
             st.stop()
 
-# ♻️ I’m creating a reset function that clears session except login info
+# ♻️ Creating a reset function to clear session except login info
 def reset_all():
     preserved_keys = {'authenticated'}
     for key in list(st.session_state.keys()):
@@ -48,7 +50,7 @@ def reset_all():
     st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
-# 🧠 I’m handling the flow from query input to AI-generated summary and export
+# 🧠 Handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
@@ -60,7 +62,7 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
-    # 💡 Buttons below the query field
+    # 💡 Displaying action buttons below the query field
     st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
@@ -74,20 +76,27 @@ def generate_summary_and_output():
 
     if gen_btn:
         if query:
-            # 🔗 I’m calling my summarization logic from langchain_config
+            # 🔗 Calling the summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary with paragraph breaks, no extra spacing
+            # ✅ Formatting AI summary with bullet points
             formatted_response = ""
             for line in response.split("•"):
                 if line.strip():
                     formatted_response += f"• {line.strip()}\n"
 
-            # ✅ Summary Section Title (centered)
+            # 🧭 Displaying a headline banner before the summary
+            st.markdown("""
+                <div style='background-color:#f0f2f6; border-left: 6px solid #4c8bf5; padding: 0.75rem 1rem; margin-top: 1rem;'>
+                    <h2 style='margin:0;'>🗞️ Top News Update</h2>
+                </div>
+            """, unsafe_allow_html=True)
+
+            # ✅ Displaying AI-generated summary
             st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
             st.success(formatted_response.strip())
 
-            # ✅ Articles Section Title (centered) and Top 3
+            # ✅ Showing the top 3 articles used in the summary
             articles_text = ""
             if articles:
                 st.markdown("<h3 style='text-align:center;'>📰 Articles Used for Summary</h3>", unsafe_allow_html=True)
@@ -105,13 +114,13 @@ def generate_summary_and_output():
             else:
                 st.warning("⚠️ No articles available.")
 
-            # 💾 I’m saving the result in history for reference
+            # 💾 Storing the result in session history
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
+            # 💡 Preparing data for download
+            combined_output = f"🗞️ Top News Update\n\n🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
@@ -119,10 +128,10 @@ def generate_summary_and_output():
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
+            # ✅ Using built-in Helvetica font to avoid Unicode errors in PDF
             pdf = FPDF()
             pdf.add_page()
-            pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
-            pdf.set_font("ArialUnicode", size=12)
+            pdf.set_font("Helvetica", size=12)
             for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
@@ -137,7 +146,7 @@ def generate_summary_and_output():
         else:
             st.warning("⚠️ Please enter a query first.")
 
-# 📌 Task 7.3: View past searches
+# 📌 Task 7.3: Viewing past searches
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
         st.markdown("---")
@@ -146,7 +155,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🚀 I’m executing everything now
+# 🚀 Running the main workflow
 handle_authentication()
 generate_summary_and_output()
 show_history()
