@@ -57,7 +57,7 @@ Do NOT make anything up — base everything strictly on the provided content.
 
 ---
 
-📌 Provide the final bullet-point summary below:
+📌 Provide only 4–6 bullet points without any introduction:
 """
 
 # 🎯 Prompt template with required input variables
@@ -73,6 +73,8 @@ newsapi = NewsApiClient(api_key=news_api_key)
 # 🔍 Fetching articles using the query
 def get_news_articles(query):
     articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
+    if not articles['articles']:
+        st.warning("⚠️ No current articles found for this query.")
     return articles['articles']
 
 # 🧾 Extracting summary content
@@ -90,12 +92,15 @@ def get_summary(query):
     summaries = summarize_articles(articles)
 
     if not summaries.strip():
+        st.error("❌ No summary content could be extracted.")
         return "⚠️ No content found to summarize. Try another topic.", []
 
-    # 🤖 Generate and return the bullet-point summary + article list
-    response = llm_chain.run(query=query, summaries=summaries)
     used_articles = [article for article in articles if article.get('description') or article.get('content')]
+
+    # 🤖 Generate and return the bullet-point summary
+    response = llm_chain.run(query=query, summaries=summaries)
     return response, used_articles
+
 
 # ✅ Outcome:
 # I’ve now fully connected LangChain to Groq’s LLM and NewsAPI.
