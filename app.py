@@ -77,33 +77,29 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Formatting response with paragraph breaks and no extra spacing
+            # ✅ Format AI summary with paragraph breaks, no extra spacing
             formatted_response = ""
             for line in response.split("•"):
                 if line.strip():
                     formatted_response += f"• {line.strip()}\n"
 
-            # ✅ Summary Section (centered)
-            st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
-            for point in formatted_response.strip().split("\n"):
-                st.markdown(f"<div style='text-align:center'>{point}</div>", unsafe_allow_html=True)
+            # ✅ Summary Section Title (centered)
+            st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
+            st.success(formatted_response.strip())
 
-            # ✅ Articles Section (showing top 3)
+            # ✅ Articles Section Title (centered) and Top 3
             articles_text = ""
             if articles:
-                st.markdown("<div style='text-align:center'><h3>📰 Articles Used for Summary</h3></div>", unsafe_allow_html=True)
+                st.markdown("<h3 style='text-align:center;'>📰 Articles Used for Summary</h3>", unsafe_allow_html=True)
                 top_articles = articles[:3]
                 for article in top_articles:
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-
-                    article_html = f"<div style='text-align:center;'>- {title}<br>📅 {date} | 🏷️ {source}<br>🔗 <a href='{url}' target='_blank'>Read More</a></div>"
-                    st.markdown(article_html, unsafe_allow_html=True)
-
-                    # 📄 Preparing article text for export
-                    articles_text += f"- {title}\n📅 {date} | 🏷️ {source}\n🔗 {url}\n"
+                    article_block = f"- {title}\n  📅 {date} | 🏷️ {source}\n  🔗 [Read More]({url})"
+                    st.markdown(article_block)
+                    articles_text += f"{article_block}\n"
 
                 st.success(f"✅ Summary extracted from {len(top_articles)} article(s).")
             else:
@@ -127,7 +123,7 @@ def generate_summary_and_output():
             pdf.add_page()
             pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
             pdf.set_font("ArialUnicode", size=12)
-            for line in combined_output.strip().split("\n"):
+            for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
