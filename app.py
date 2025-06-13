@@ -155,10 +155,6 @@ def generate_summary_and_output():
             articles_text = ""
             if articles:
                 st.markdown("<h3 style='text-align:center;'>📰 Articles Used for Summary</h3>", unsafe_allow_html=True)
-                st.markdown(f"""
-                    <div style='background-color:#fdfdfd; border: 1px solid #ddd; padding: 1rem; border-radius: 6px;'>
-                        <div style='margin-bottom: 1rem;'>
-                """, unsafe_allow_html=True)
                 top_articles = articles[:3]
                 for article in top_articles:
                     title = article.get("title", "No title")
@@ -169,8 +165,6 @@ def generate_summary_and_output():
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
                 st.markdown("""
-                        </div>
-                    </div>
                     <div style='background-color:#e6ffe6; border-radius:6px; padding:0.5rem; margin-top:1rem; text-align:center;'>
                         <span style='color: #2e7d32; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
                     </div>
