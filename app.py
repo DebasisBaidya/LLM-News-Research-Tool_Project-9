@@ -120,7 +120,7 @@ def generate_summary_and_output():
                 st.session_state.query_input = example
             st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div style='text-align:center; margin-top: 0.5rem;'><h4>🔍 Enter your Query</h4></div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; margin-top: 0rem; margin-bottom: 0.25rem;'><h4>🔍 Enter your Query</h4></div>", unsafe_allow_html=True)
     query = st.text_area("", key="query_input", height=100, label_visibility="collapsed")
 
     col1, col2 = st.columns(2)
