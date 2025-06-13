@@ -41,8 +41,7 @@ Using the provided real-time news article content and user query, generate a cle
 
 ✅ The summary should:
 - Be factually accurate and unbiased
-- Contain 4 to 6 bullet points
-- Each point must follow the format: MainPoint ➤ Subpoint
+- Contain 4 to 6 clean bullet points
 - Avoid repetition of query
 - Do not generate any intro or closing lines
 
@@ -58,7 +57,7 @@ Do NOT make anything up — base everything strictly on the provided content.
 
 ---
 
-📌 Provide the final formatted bullet-point summary below, using • as bullet symbol:
+📌 Provide only the bullet-point summary below, using • for each point:
 """
 
 # 🎯 Prompt template with required input variables
@@ -100,7 +99,7 @@ def get_summary(query):
 
     # 🤖 Generate and return the bullet-point summary and article metadata
     summary_output = llm_chain.run(query=query, summaries=summaries)
-    return summary_output, used_articles
+    return summary_output.strip(), used_articles
 
 
 # ✅ Outcome:
