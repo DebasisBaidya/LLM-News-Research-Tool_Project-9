@@ -105,8 +105,8 @@ def generate_summary_and_output():
     else:
         bullet_text = response
 
-formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
-st.success(formatted_response)
+        formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
+        st.success(formatted_response)
             # 📝 Formatting bullets cleanly
             formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
             st.success(formatted_response)
