@@ -170,9 +170,9 @@ def generate_summary_and_output():
                     articles_text += f"{article_block}\n"
                 st.markdown("""
                         </div>
-                        <div style='text-align:center; padding-top: 0.5rem;'>
-                            <span style='color: green; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
-                        </div>
+                    </div>
+                    <div style='background-color:#e6ffe6; border-radius:6px; padding:0.5rem; margin-top:1rem; text-align:center;'>
+                        <span style='color: #2e7d32; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
                     </div>
                 """, unsafe_allow_html=True)
             else:
