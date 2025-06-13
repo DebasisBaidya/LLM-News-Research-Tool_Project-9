@@ -24,14 +24,14 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
-# 🔐 Task 2.1: Loading API keys securely
+# 🔐 Task 2.1: Loading API keys from Streamlit secrets
 groq_api_key = st.secrets["GROQ_API_KEY"]
 news_api_key = st.secrets["NEWS_API_KEY"]
 
-# ✅ Task 2.2: Initializing LLM with Groq’s LLaMA3 model
+# ✅ Task 2.2: Initializing Groq LLM with LLaMA3
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 
-# ✅ Task 2.3: Creating enhanced summarization prompt
+# ✅ Task 2.3: Creating the enhanced prompt for summarization
 enhanced_template = """
 You are a highly factual AI summarizer.
 
@@ -45,38 +45,49 @@ News Article Content: {summaries}
 
 Provide a bullet-point summary:
 """
+
+# 📌 Creating prompt template with 2 inputs: query and summaries
 enhanced_prompt = PromptTemplate(template=enhanced_template, input_variables=["query", "summaries"])
+
+# 📌 Creating LangChain LLMChain object with prompt + LLM
 llm_chain = LLMChain(prompt=enhanced_prompt, llm=llm)
 
-# ✅ Task 3.1: Initializing NewsAPI client
+# ✅ Task 3.1: Initializing NewsAPI to fetch current news
 newsapi = NewsApiClient(api_key=news_api_key)
 
-# ✅ Task 3.2: Fetching and summarizing real-time articles
+# ✅ Task 3.2: Fetching articles by query
 def get_news_articles(query):
+    # 🔍 Getting recent articles sorted by time
     articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
+
     if not articles['articles']:
         st.warning("⚠️ No current articles found for this query.")
-    else:
-        st.write("📰 Top Article Title:", articles['articles'][0].get('title', 'No Title Found'))
     return articles['articles']
 
+# ✅ Task 3.3: Extracting usable descriptions/content from fetched articles
 def summarize_articles(articles):
     summaries = [
         article.get('description') or article.get('content') or ''
         for article in articles if article.get('description') or article.get('content')
     ]
-    if summaries:
-        st.success(f"✅ Found {len(summaries)} usable article descriptions.")
-    else:
-        st.error("❌ No summary content could be extracted.")
     return ' '.join(summaries)
 
-# ✅ Task 3.3: Running summarization chain
+# ✅ Task 3.4: Running the summarization LLM chain
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
+
     if not summaries.strip():
+        st.error("❌ No summary content could be extracted.")
         return "⚠️ No content found to summarize. Try another topic."
+
+    # ✅ Showing both title and usable count in one neat markdown section
+    if articles:
+        top_title = articles[0].get('title', 'No Title Found')
+        sentence_count = len([s for s in summaries.split('.') if s.strip()])
+        st.markdown(f"📰 **Top Article Title:** {top_title}")
+        st.markdown(f"✅ **Summary extracted from {sentence_count} article section(s).**")
+
     return summaries
 
 
