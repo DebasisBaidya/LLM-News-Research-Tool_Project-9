@@ -16,12 +16,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
+# 🔐 I’m creating a simple login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
         st.markdown("""
+            <style>
+            .login-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin: 0 auto;
+                padding: 1rem 2rem;
+                max-width: 400px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            </style>
             <div class='login-container'>
                 <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
                 <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
@@ -61,11 +76,13 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
+    st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
         gen_btn = st.button("⚡ Generate Summary", use_container_width=True)
     with col2:
         reset_btn = st.button("🔄 Reset All", use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset_btn:
         reset_all()
@@ -74,51 +91,50 @@ def generate_summary_and_output():
         if query:
             response, articles = get_summary(query)
 
-            # ✅ Formatting summary without bold or subpoints, with paragraph breaks
+            # ✅ Format summary (no paragraph breaks)
             formatted_response = ""
             for point in response.split("•"):
                 if point.strip():
-                    formatted_response += f"• {point.strip()}\n\n"
+                    formatted_response += f"• {point.strip()}\n"
 
-            # ✅ AI-Generated Summary Output
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
             st.success(formatted_response)
 
-            # ✅ Articles Used for Summary
+            # ✅ Top 3 articles only
             articles_text = ""
             if articles:
                 st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
-                for i, article in enumerate(articles, 1):
+                for i, article in enumerate(articles[:3], 1):
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"{i}. {title}\n📅 {date} | 🏷️ {source}\n🔗 [Read More]({url})\n"
+                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 [Read More]({url})"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
 
-                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
+                st.success(f"✅ Summary extracted from {min(3, len(articles))} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
-            # ✅ Save to session history
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # ✅ Download Buttons
             combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
+
+            st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
 
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
-            # ✅ PDF Export (Fixed)
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", size=12)
+            pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
+            pdf.set_font("ArialUnicode", size=12)
             for line in combined_output.split("\n"):
-                pdf.multi_cell(0, 10, line.encode('latin-1', errors='replace').decode('latin-1'))
+                pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
             pdf_output.write(pdf_bytes)
@@ -126,6 +142,8 @@ def generate_summary_and_output():
 
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
+
+            st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
 
@@ -138,7 +156,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🚀 Executing everything
+# 🚀 I’m executing everything now
 handle_authentication()
 generate_summary_and_output()
 show_history()
