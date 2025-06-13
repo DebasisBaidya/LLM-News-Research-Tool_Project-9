@@ -1,3 +1,4 @@
+
 # ✅ Phase 3 + 7 Combined: Streamlit Interface + Enhancements
 
 import streamlit as st
@@ -53,11 +54,11 @@ def handle_authentication():
             else:
                 st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
 
-        # ✅ Properly close styled box and stop app
+        # ✅ Closing login box
         st.markdown("</div>", unsafe_allow_html=True)
         st.stop()
 
-# ♻️ Resetting the app while keeping login state
+# ♻️ I’m resetting app data except login
 def reset_all():
     preserved_keys = {'authenticated'}
     for key in list(st.session_state.keys()):
@@ -78,21 +79,45 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
-    col1, col2 = st.columns(2)
-    if col1.button("⚡ Generate Summary"):
+    # 🔘 Center align action buttons
+    st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        gen_btn = st.button("⚡ Generate Summary", use_container_width=True)
+    with col2:
+        reset_btn = st.button("🔄 Reset All", use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if reset_btn:
+        reset_all()
+
+    if gen_btn:
         if query:
             summaries = get_summary(query)
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("### 🧠 AI-Generated News Summary:")
-            formatted_response = "\n".join([f"- {line.strip()}" for line in response.split("•") if line.strip()])
+
+            # 🔍 I’m separating heading and bullet points if header line exists
+            if "Here is a factual summary of the current situation:" in response:
+                st.markdown("> **Here is a factual summary of the current situation:**")
+                _, bullet_text = response.split("Here is a factual summary of the current situation:", 1)
+            else:
+                bullet_text = response
+
+            # 📝 Formatting bullets cleanly
+            formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
             st.success(formatted_response)
 
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            st.download_button("📥 Download as TXT", data=formatted_response, file_name="summary.txt", mime="text/plain")
+            # 💾 Center-aligned download buttons
+            st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
+            colA, colB = st.columns([1, 1])
+            with colA:
+                st.download_button("📥 Download as TXT", data=formatted_response, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
             pdf = FPDF()
             pdf.add_page()
@@ -106,14 +131,12 @@ def generate_summary_and_output():
                 pdf_bytes = pdf.output(dest="S").encode("utf-8", errors="ignore")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
-            st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf")
+
+            with colB:
+                st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
+            st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
-
-    if col2.button("🔄 Reset All"):
-        reset_all()
-
-    return query
 
 # 📌 Task 7.3: View Query History
 def show_history():
@@ -124,7 +147,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🚀 Running the full app
+# 🚀 I’m running the full app flow
 handle_authentication()
 generate_summary_and_output()
 show_history()
