@@ -132,7 +132,7 @@ def generate_summary_and_output():
 
             st.markdown(f"""
                 <div style='background-color:#f0f2f6; text-align:center; padding: 0.75rem 1rem; margin-top: 1rem;'>
-                    <p style='margin:0; font-size: 16px; font-weight:600; color: #333;'>{header_line}</p>
+                    <span style='margin:0; font-size: 16px; color: #333;'>📰 <strong>Top News Header:</strong> {header_line}</span>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -158,7 +158,7 @@ def generate_summary_and_output():
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
                 st.markdown("""
-                    <div style='text-align:center;'>
+                    <div style='text-align:center; margin-top: 0.5rem;'>
                         <span style='color: green; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
                     </div>
                 """, unsafe_allow_html=True)
@@ -169,7 +169,7 @@ def generate_summary_and_output():
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_summary))
 
-            combined_output = f"{header_line}\n\n🧠 AI-Generated News Summary:\n{formatted_summary.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
+            combined_output = f"Top News Header: {header_line}\n\n🧠 AI-Generated News Summary:\n{formatted_summary.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             colA, colB = st.columns(2)
             with colA:
