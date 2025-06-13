@@ -1,14 +1,14 @@
 # ✅ Phase 1: Environment Setup (Completed)
 # -----------------------------------------------------
 # 📌 Task 1.1: Install Required Libraries
-# - I’m installing the essential Python libraries to handle LLM logic, UI, and news scraping.
-# - The required libraries are: langchain, streamlit, newsapi-python, groq, and python-dotenv
+# - Installing the essential Python libraries to handle LLM logic, UI, and news scraping.
+# - The required libraries are: langchain, streamlit, newsapi-python, groq, langchain-groq, and python-dotenv
 
 # ✅ Installation Command:
-# pip install langchain streamlit newsapi-python groq python-dotenv
+# pip install langchain streamlit newsapi-python groq langchain-groq python-dotenv
 
 # 📌 Task 1.2: Obtain API Keys
-# - I’m generating the required API keys to access Groq’s LLM and NewsAPI.
+# - Generating the required API keys to access Groq’s LLM and NewsAPI.
 # - Getting Groq API key from: https://console.groq.com/keys
 # - Getting NewsAPI key from: https://newsapi.org/
 
@@ -46,7 +46,7 @@ Your job is to summarize real-time news based on the provided articles and the u
 • Each bullet starts with a strong point or fact
 • Use exactly 4 to 6 bullets, prefixed with "•"
 • Avoid repeating the query or giving generic summaries
-• Start the summary with: "Top News Header Found For this: [Your Inferred Title]"
+• Start the summary with your strongest bullet — do NOT prefix it with any label like 'Top News Header'
 • Do NOT add conclusions, advice, or any extra fluff
 • NEVER invent information — rely strictly on what’s in the article content
 
@@ -100,6 +100,6 @@ def get_summary(query):
 
 
 # ✅ Outcome:
-# I’ve now fully connected LangChain to Groq’s LLM and NewsAPI.
-# My tool can now fetch and summarize real-time news on any topic — politics, tech, finance, sports, and more —
+# Now fully connected LangChain to Groq’s LLM and NewsAPI.
+# The tool can now fetch and summarize real-time news on any topic — politics, tech, finance, sports, and more —
 # using smart prompt templates and chains for accurate, readable summaries.
