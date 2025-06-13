@@ -67,8 +67,8 @@ def reset_all():
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 # 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
-    st.markdown("### 🧪 Try one of the sample queries:")
-    examples = ["Indian Economy", "AI in Healthcare", "Stock Market Crash", "POK Issues"]
+        st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
+    examples = [ "Air India Crash", "Indian Economy", "AI in Healthcare", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
@@ -96,17 +96,24 @@ def generate_summary_and_output():
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("### 🧠 AI-Generated News Summary:")
-
+            
             # 🧾 I’m separating the intro line (if any) from bullet points
+            intro = ""
             if "Here is a factual and unbiased summary of the situation:" in response:
-                st.markdown("> **Here is a factual and unbiased summary of the situation:**")
-                _, bullet_text = response.split("Here is a factual and unbiased summary of the situation:", 1)
+                intro = "Here is a factual and unbiased summary of the situation:"
+                bullet_text = response.split(intro, 1)[1]
             else:
                 bullet_text = response
-
+            
             # ✅ I’m formatting the bullets using '-' instead of '•'
             formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
+            
+            # 🧠 Showing the summary with intro if it exists
+            if intro:
+                st.markdown(f"> **{intro}**")
+            
             st.success(formatted_response)
+
 
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
