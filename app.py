@@ -96,9 +96,12 @@ def generate_summary_and_output():
 
             # ✅ Summary Section
             st.markdown("### 🧠 AI-Generated News Summary:")
-    
+            intro_line = "Here is a factual and unbiased summary of the situation:"
+            if intro_line in response:
+                response = response.replace(intro_line, "").strip()
+
             formatted_response = "\n".join([
-                f"- {line.strip()}" for line in response.split("-") if line.strip()
+                f"- {line.strip()}" for line in response.split("•") if line.strip()
             ])
             st.success(formatted_response)
 
