@@ -65,7 +65,6 @@ def reset_all():
     st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
-# 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
@@ -77,7 +76,6 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
-    # 💡 Buttons below the query field
     st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
@@ -94,23 +92,18 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Summary Section
-            st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            intro_line = "Here is a factual and unbiased summary of the situation:"
-            if intro_line in response:
-                response = response.replace(intro_line, "").strip()
-
-            # 🧠 Format summary with bold main points and indented subpoints
+            # ✅ Format bullet + subpoint
             formatted_response = ""
             for point in response.split("•"):
                 if point.strip():
-                    if "–" in point or "-" in point:
-                        parts = point.strip().split("–", 1) if "–" in point else point.strip().split("-", 1)
-                        main = parts[0].strip()
-                        sub = parts[1].strip() if len(parts) > 1 else ""
-                        formatted_response += f"• **{main}**\n    - {sub}\n"
+                    if " - " in point:
+                        main, sub = point.strip().split(" - ", 1)
+                        formatted_response += f"• **{main.strip()}**\n    - {sub.strip()}\n"
                     else:
-                        formatted_response += f"• **{point.strip()}**\n"
+                        formatted_response += f"• {point.strip()}\n"
+
+            # ✅ Display AI summary
+            st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
             st.success(formatted_response)
 
             # ✅ Articles Section
@@ -130,14 +123,15 @@ def generate_summary_and_output():
             else:
                 st.warning("⚠️ No articles available.")
 
-            # 💾 I’m saving the result in history for reference
+            # 💾 Save to history
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # 💡 Show Download options (TXT + PDF)
+            # 📦 Combine output for export
             combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
 
+            # 💡 Export to TXT and PDF
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
 
@@ -148,12 +142,12 @@ def generate_summary_and_output():
             pdf.add_page()
             pdf.set_font("Arial", size=12)
             for line in combined_output.split("\n"):
-                pdf.multi_cell(0, 10, line)
+                try:
+                    pdf.multi_cell(0, 10, line.encode("latin-1", errors="replace").decode("latin-1"))
+                except Exception:
+                    pdf.multi_cell(0, 10, "[Error Encoding Line]")
             pdf_output = io.BytesIO()
-            try:
-                pdf_bytes = pdf.output(dest="S").encode("latin-1")
-            except UnicodeEncodeError:
-                pdf_bytes = pdf.output(dest="S").encode("utf-8", errors="ignore")
+            pdf_bytes = pdf.output(dest="S").encode("latin-1")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
             with colB:
