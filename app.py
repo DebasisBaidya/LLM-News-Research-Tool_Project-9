@@ -39,7 +39,7 @@ def handle_authentication():
             </style>
             <div class='login-container'>
                 <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
-                <p style='font-size: 14px; color: gray;'>Hint: Username - Debasis | Password - Baidya123</p>
+                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
