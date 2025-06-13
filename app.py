@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from langchain_config import llm_chain, get_summary
+from langchain_config import get_summary  # ✅ Now returns summary and articles
 from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
 import io
 
@@ -16,7 +16,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
-# 🔐 I’m creating a simple login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -68,7 +67,7 @@ def reset_all():
 # 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
-    examples = ["Air India Crash",  "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
+    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
@@ -91,9 +90,8 @@ def generate_summary_and_output():
 
     if gen_btn:
         if query:
-            # 🔗 I’m calling my summarization logic from langchain_config
-            summaries = get_summary(query)
-            response = llm_chain.run({"query": query, "summaries": summaries})
+            # 🔗 Get summary and related articles
+            response, articles = get_summary(query)
 
             st.markdown("### 🧠 AI-Generated News Summary:")
 
@@ -110,14 +108,20 @@ def generate_summary_and_output():
             # 🧠 Show formatted bullet list (without showing the intro line again)
             st.success(formatted_response)
 
-            # 📰 Articles used for the summary
+            # 📰 Show article metadata
             st.markdown("### 📰 Articles Used for Summary:")
-            if summaries:
-                st.info(summaries)
+            if articles:
+                for i, article in enumerate(articles, 1):
+                    title = article.get("title", "No title")
+                    source = article.get("source", {}).get("name", "Unknown Source")
+                    date = article.get("publishedAt", "").split("T")[0]
+                    url = article.get("url", "#")
+                    st.markdown(f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})")
+                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
-                st.warning("No article summaries were returned.")
+                st.warning("No articles found for this topic.")
 
-            # 💾 I’m saving the result in history for reference
+            # 💾 Save in history
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
