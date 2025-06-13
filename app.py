@@ -97,22 +97,19 @@ def generate_summary_and_output():
 
             st.markdown("### 🧠 AI-Generated News Summary:")
 
-            # 🧾 I’m separating the intro line (if any) from bullet points
-            intro = ""
-            if "Here is a factual and unbiased summary of the situation:" in response:
-                intro = "Here is a factual and unbiased summary of the situation:"
-                bullet_text = response.split(intro, 1)[1]
-            else:
-                bullet_text = response
-
-            # ✅ I’m formatting the bullets using '-' instead of '•'
-            formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
-
-            # 🧠 Showing the summary with intro if it exists
-            if intro:
-                st.markdown(f"> **{intro}**")
-
+            # 🧾 Cleanly separate bullet points from any intro sentence
+            intro_line = "Here is a factual and unbiased summary of the situation:"
+            if intro_line in response:
+                response = response.replace(intro_line, "").strip()
+            
+            # ✅ Format bullet points cleanly
+            formatted_response = "\n".join([
+                f"- {line.strip()}" for line in response.split("•") if line.strip()
+            ])
+            
+            # 🧠 Show formatted bullet list (without showing the intro line again)
             st.success(formatted_response)
+
 
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
