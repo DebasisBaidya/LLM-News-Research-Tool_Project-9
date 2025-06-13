@@ -12,7 +12,7 @@
 # - Getting Groq API key from: https://console.groq.com/keys
 # - Getting NewsAPI key from: https://newsapi.org/
 
-# 📌 Task 1.3: Stored in 'Streamlit Secret TOML' file
+# 📌 Task 1.3: Store in 'Streamlit Secret TOML' file
 
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
