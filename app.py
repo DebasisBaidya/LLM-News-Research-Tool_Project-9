@@ -110,10 +110,19 @@ def generate_summary_and_output():
     if gen_btn:
         if query:
             response, articles = get_summary(query)
-            formatted_response = "\n".join(f"• {line.strip()}" for line in response.split("•") if line.strip())
+            bullet_lines = [f"• {line.strip()}" for line in response.split("•") if line.strip()]
+
+            header_line = bullet_lines[0] if bullet_lines else ""
+            formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
+
+            st.markdown(f"""
+                <div style='background-color:#f0f2f6; border-left: 6px solid #4c8bf5; padding: 1rem; margin-top: 1rem;'>
+                    <h4 style='margin:0;'>{header_line}</h4>
+                </div>
+            """, unsafe_allow_html=True)
 
             st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
-            st.markdown(f"<pre style='background-color:#e8f0fe; padding:1rem;'>{formatted_response.strip()}</pre>", unsafe_allow_html=True)
+            st.markdown(f"<pre style='background-color:#e8f0fe; padding:1rem;'>{formatted_summary}</pre>", unsafe_allow_html=True)
 
             articles_text = ""
             if articles:
@@ -133,9 +142,9 @@ def generate_summary_and_output():
 
             if 'history' not in st.session_state:
                 st.session_state.history = []
-            st.session_state.history.append((query, formatted_response))
+            st.session_state.history.append((query, formatted_summary))
 
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
+            combined_output = f"{header_line}\n\n🧠 AI-Generated News Summary:\n{formatted_summary.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             colA, colB = st.columns(2)
             with colA:
