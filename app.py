@@ -116,8 +116,8 @@ def generate_summary_and_output():
             formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
 
             st.markdown(f"""
-                <div style='background-color:#f0f2f6; border-left: 6px solid #4c8bf5; padding: 1rem; margin-top: 1rem;'>
-                    <h4 style='margin:0;'>{header_line}</h4>
+                <div style='background-color:#f0f2f6; border-left: 4px solid #4c8bf5; padding: 0.75rem 1rem; margin-top: 1rem;'>
+                    <p style='margin:0; font-size: 15px; color: #333;'>{header_line}</p>
                 </div>
             """, unsafe_allow_html=True)
 
