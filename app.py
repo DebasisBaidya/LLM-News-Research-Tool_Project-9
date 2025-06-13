@@ -101,15 +101,21 @@ def generate_summary_and_output():
             intro_line = "Here is a factual and unbiased summary of the situation:"
             if intro_line in response:
                 response = response.replace(intro_line, "").strip()
-            
+
             # ✅ Format bullet points cleanly
             formatted_response = "\n".join([
                 f"- {line.strip()}" for line in response.split("•") if line.strip()
             ])
-            
+
             # 🧠 Show formatted bullet list (without showing the intro line again)
             st.success(formatted_response)
 
+            # 📰 Articles used for the summary
+            st.markdown("### 📰 Articles Used for Summary:")
+            if summaries:
+                st.info(summaries)
+            else:
+                st.warning("No article summaries were returned.")
 
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
