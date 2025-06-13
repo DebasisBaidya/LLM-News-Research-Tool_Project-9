@@ -112,12 +112,12 @@ def generate_summary_and_output():
             response, articles = get_summary(query)
             bullet_lines = [f"• {line.strip()}" for line in response.split("•") if line.strip()]
 
-            header_line = bullet_lines[0] if bullet_lines else ""
+            header_line = bullet_lines[0][1:].strip() if bullet_lines else ""
             formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
 
             st.markdown(f"""
-                <div style='background-color:#f0f2f6; border-left: 4px solid #4c8bf5; padding: 0.75rem 1rem; margin-top: 1rem;'>
-                    <p style='margin:0; font-size: 15px; color: #333;'>{header_line}</p>
+                <div style='background-color:#f0f2f6; text-align:center; padding: 0.75rem 1rem; margin-top: 1rem;'>
+                    <p style='margin:0; font-size: 16px; font-weight:600; color: #333;'>📰 Top News Header: {header_line}</p>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -150,7 +150,7 @@ def generate_summary_and_output():
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_summary))
 
-            combined_output = f"{header_line}\n\n🧠 AI-Generated News Summary:\n{formatted_summary.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
+            combined_output = f"📰 Top News Header: {header_line}\n\n🧠 AI-Generated News Summary:\n{formatted_summary.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             colA, colB = st.columns(2)
             with colA:
