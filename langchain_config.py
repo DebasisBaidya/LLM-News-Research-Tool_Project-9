@@ -16,7 +16,9 @@
 
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
+import os
 import streamlit as st
+from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
@@ -82,7 +84,7 @@ def summarize_articles(articles):
     return ' '.join(summaries)
 
 # ✅ Phase 3.3: Final Summary Output
-# 📋 Generating summary + article metadata
+# 📋 Generating summary + article info
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
@@ -90,15 +92,10 @@ def get_summary(query):
     if not summaries.strip():
         return "⚠️ No content found to summarize. Try another topic.", []
 
-    # 🔍 Filter used articles
+    # 🤖 Generate and return the bullet-point summary + article list
+    response = llm_chain.run(query=query, summaries=summaries)
     used_articles = [article for article in articles if article.get('description') or article.get('content')]
-
-    # 🧠 Generate bullet-point summary from articles
-    response = llm_chain.run({"query": query, "summaries": summaries})
-
-    # ✅ Return summary and metadata
     return response, used_articles
-
 
 # ✅ Outcome:
 # I’ve now fully connected LangChain to Groq’s LLM and NewsAPI.
