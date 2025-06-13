@@ -23,31 +23,31 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
 
-# 📌 Task 1.1: Load Environment Variables
-# 🔐 Load API keys securely from .env or Streamlit Secrets
+# 📌 Task 1.1: Loading API keys securely
+# 🔐 Reading from environment variables or Streamlit secrets
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 news_api_key = os.getenv("NEWS_API_KEY")
 
-# 📌 Task 2.1: Initialize the Language Model
+# 📌 Task 2.1: Initializing the language model
 # 🧠 Connecting to Groq's LLaMA3 model
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 
-# 📌 Task 3.1: Design Prompt Template
-# ✏️ This prompt ensures clear, fact-based summaries without fluff
+# 📌 Task 3.1: Defining a detailed and improved prompt
+# ✍️ Making sure the summary is fresh, relevant, and non-repetitive
 enhanced_template = """
-You are an intelligent and strictly factual AI news summarizer.
+You are an intelligent and unbiased AI summarizer.
 
-Given a user query and a set of real-time news article excerpts,
-generate an accurate, concise summary of the situation.
+Your job is to summarize real-time news based on the provided articles and the user query.
 
-✅ Summary Guidelines:
-• Be strictly factual and free of bias
-• Cover key developments and details
-• Provide 4 to 6 bullet points only
-• Use the • bullet symbol consistently
-• Avoid restating the query or adding an intro/outro
-• NEVER invent or speculate — rely strictly on article data
+✅ Please ensure:
+• The summary is accurate, factual, and fresh
+• Only current developments are covered
+• Each bullet starts with a strong point or fact
+• Use exactly 4 to 6 bullets, prefixed with "•"
+• Avoid repeating the query or giving generic summaries
+• Do NOT add conclusions, advice, or any extra fluff
+• NEVER invent information — rely strictly on what’s in the article content
 
 ---
 
@@ -59,33 +59,32 @@ generate an accurate, concise summary of the situation.
 
 ---
 
-📌 Provide only the final bullet-point summary below:
+📌 Return only the final bullet-point summary below:
 """
 
-# 📌 Task 3.1.2: Compile Prompt Template
+# 📌 Task 3.1.2: Creating the prompt template with required input variables
 prompt = PromptTemplate(template=enhanced_template, input_variables=["query", "summaries"])
 
-# 🔗 Create LLMChain with model and prompt
+# 🔗 Creating a LangChain that links the LLM and prompt
 llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-# 📌 Task 3.2: Setup NewsAPI
-# 🌐 Fetch news articles via keyword search
+# 📌 Task 3.2: Initializing NewsAPI for article fetching
+# 🌐 Pulling real-time news results
 newsapi = NewsApiClient(api_key=news_api_key)
 
 def get_news_articles(query):
-    articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
-    return articles.get("articles", [])
+    return newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10).get("articles", [])
 
-# 📌 Task 3.2.1: Combine article content into a string
-# 🧾 Extract description or content from each article
+# 📌 Task 3.2.1: Extracting usable text for the model
+# 🧾 Combining content and description from each article
 def summarize_articles(articles):
     return ' '.join(
         article.get('description') or article.get('content') or ''
         for article in articles
     )
 
-# 📌 Task 3.3: Summarization Entry Point
-# 🧠 Return a summary and metadata for use in the UI
+# 📌 Task 3.3: Main entry point for summarization
+# 🧠 Returning the summary output and top articles for UI rendering
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
