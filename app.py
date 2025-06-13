@@ -16,29 +16,26 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Adding User Authentication
-# 🔐 Creating a styled login form to restrict access
+# 🔐 Creating a clear login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
-        with st.container():
-            st.markdown("""<div style='text-align:center;'>
-                <h3>🔐 Login Required</h3>
-                <p style='font-size:14px;'>Username: <b>Debasis</b> | Password: <b>Baidya123</b></p>
-            </div>""", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center;'>🔐 Login Required</h3>", unsafe_allow_html=True)
+        st.caption("Username: Debasis | Password: Baidya123")
 
-            username = st.text_input("Username", placeholder="Try: Debasis", key="username")
-            password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
+        username = st.text_input("Username", placeholder="Try: Debasis", key="username")
+        password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
 
-            if st.button("Login", use_container_width=True):
-                if username == "Debasis" and password == "Baidya123":
-                    st.session_state.authenticated = True
-                    st.rerun()
-                else:
-                    st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
+        if st.button("Login", use_container_width=True):
+            if username == "Debasis" and password == "Baidya123":
+                st.session_state.authenticated = True
+                st.rerun()
+            else:
+                st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
 
-            st.stop()
+        st.stop()
 
 # ♻️ Creating a reset function to clear session except login info
 def reset_all():
@@ -79,11 +76,10 @@ def generate_summary_and_output():
             # 🔗 Calling the summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Formatting AI summary with bullet points
-            formatted_response = ""
-            for line in response.split("•"):
-                if line.strip():
-                    formatted_response += f"• {line.strip()}\n"
+            # ✅ Formatting AI summary with bullet points and line breaks
+            formatted_response = "\n".join(
+                f"• {line.strip()}" for line in response.split("•") if line.strip()
+            )
 
             # 🧭 Displaying a headline banner before the summary
             st.markdown("""
@@ -94,7 +90,7 @@ def generate_summary_and_output():
 
             # ✅ Displaying AI-generated summary
             st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
-            st.success(formatted_response.strip())
+            st.markdown(f"<pre style='background-color:#e8f0fe; padding:1rem;'>{formatted_response.strip()}</pre>", unsafe_allow_html=True)
 
             # ✅ Showing the top 3 articles used in the summary
             articles_text = ""
@@ -128,11 +124,11 @@ def generate_summary_and_output():
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
-            # ✅ Using built-in Helvetica font to avoid Unicode errors in PDF
+            # ✅ Generating a valid PDF with each bullet on a new line safely
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Helvetica", size=12)
-            for line in combined_output.split("\n"):
+            pdf.set_font("Arial", size=12)
+            for line in combined_output.splitlines():
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
