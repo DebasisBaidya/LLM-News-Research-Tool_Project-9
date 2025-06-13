@@ -1,10 +1,9 @@
-
 # ✅ Phase 3 + 7 Combined: Streamlit Interface + Enhancements
 
 import streamlit as st
 import pandas as pd
 from langchain_config import llm_chain, get_summary
-from fpdf import FPDF  # 🧾 for generating downloadable PDF
+from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
 import io
 
 # ⚙️ I’m setting up the app layout and title
@@ -17,7 +16,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
-# 🔐 I’m handling login authentication for the app
+# 🔐 I’m creating a simple login form to restrict access
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -46,19 +45,17 @@ def handle_authentication():
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
         password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
 
-        login_btn = st.button("Login", use_container_width=True)
-        if login_btn:
+        if st.button("Login", use_container_width=True):
             if username == "Debasis" and password == "Baidya123":
                 st.session_state.authenticated = True
                 st.rerun()
             else:
                 st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
 
-        # ✅ Closing login box
         st.markdown("</div>", unsafe_allow_html=True)
         st.stop()
 
-# ♻️ I’m resetting app data except login
+# ♻️ I’m creating a reset function that clears session except login info
 def reset_all():
     preserved_keys = {'authenticated'}
     for key in list(st.session_state.keys()):
@@ -68,6 +65,7 @@ def reset_all():
     st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
+# 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("### 🧪 Try one of the sample queries:")
     examples = ["Indian Economy", "AI in Healthcare", "Stock Market Crash", "POK Issues"]
@@ -79,9 +77,9 @@ def generate_summary_and_output():
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
-    # 🔘 Center align action buttons
+    # 💡 Buttons below the query field
     st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns(2)
     with col1:
         gen_btn = st.button("⚡ Generate Summary", use_container_width=True)
     with col2:
@@ -93,29 +91,31 @@ def generate_summary_and_output():
 
     if gen_btn:
         if query:
+            # 🔗 I’m calling my summarization logic from langchain_config
             summaries = get_summary(query)
             response = llm_chain.run({"query": query, "summaries": summaries})
 
             st.markdown("### 🧠 AI-Generated News Summary:")
 
-        # 🔍 I’m separating heading and bullet points if header line exists
-        if "Here is a factual and unbiased summary of the situation:" in response:
-            st.markdown("> **Here is a factual and unbiased summary of the situation:**")
-            _, bullet_text = response.split("Here is a factual and unbiased summary of the situation:", 1)
-        else:
-            bullet_text = response
-            
-            # 📝 Formatting bullets cleanly
+            # 🧾 I’m separating the intro line (if any) from bullet points
+            if "Here is a factual and unbiased summary of the situation:" in response:
+                st.markdown("> **Here is a factual and unbiased summary of the situation:**")
+                _, bullet_text = response.split("Here is a factual and unbiased summary of the situation:", 1)
+            else:
+                bullet_text = response
+
+            # ✅ I’m formatting the bullets using '-' instead of '•'
             formatted_response = "\n".join([f"- {line.strip()}" for line in bullet_text.split("•") if line.strip()])
             st.success(formatted_response)
-            
+
+            # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, formatted_response))
 
-            # 💾 Center-aligned download buttons
+            # 💡 Show Download options (TXT + PDF)
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
-            colA, colB = st.columns([1, 1])
+            colA, colB = st.columns(2)
             with colA:
                 st.download_button("📥 Download as TXT", data=formatted_response, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
@@ -131,14 +131,13 @@ def generate_summary_and_output():
                 pdf_bytes = pdf.output(dest="S").encode("utf-8", errors="ignore")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
-
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
             st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
 
-# 📌 Task 7.3: View Query History
+# 📌 Task 7.3: View past searches
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
         st.markdown("---")
@@ -147,7 +146,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🚀 I’m running the full app flow
+# 🚀 I’m executing everything now
 handle_authentication()
 generate_summary_and_output()
 show_history()
