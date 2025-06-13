@@ -105,8 +105,8 @@ def generate_summary_and_output():
             ])
             st.success(formatted_response)
 
-            
             # ✅ Articles Section
+            articles_text = ""
             if articles:
                 st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
                 for i, article in enumerate(articles, 1):
@@ -114,9 +114,11 @@ def generate_summary_and_output():
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    st.markdown(f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})")
-                
-                st.success(f"✅ Summary extracted from {len(articles)} article(s)).")
+                    article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
+                    st.markdown(article_block)
+                    articles_text += f"{article_block}\n"
+
+                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
@@ -126,15 +128,18 @@ def generate_summary_and_output():
             st.session_state.history.append((query, formatted_response))
 
             # 💡 Show Download options (TXT + PDF)
+            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
+
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
+
             with colA:
-                st.download_button("📥 Download as TXT", data=formatted_response, file_name="summary.txt", mime="text/plain", use_container_width=True)
+                st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
-            for line in formatted_response.split("\n"):
+            for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             try:
