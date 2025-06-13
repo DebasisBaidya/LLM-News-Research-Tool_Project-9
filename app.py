@@ -122,7 +122,13 @@ def generate_summary_and_output():
             """, unsafe_allow_html=True)
 
             st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
-            st.markdown(f"<pre style='background-color:#e8f0fe; padding:1rem;'>{formatted_summary}</pre>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style='background-color:#e8f0fe; padding:1rem; border-radius:6px;'>
+                    <ul style='padding-left: 1.2rem;'>
+                        {''.join([f'<li style="margin-bottom: 0.4rem;">{line[1:].strip()}</li>' for line in formatted_summary.splitlines() if line.strip()])}
+                    </ul>
+                </div>
+            """, unsafe_allow_html=True)
 
             articles_text = ""
             if articles:
