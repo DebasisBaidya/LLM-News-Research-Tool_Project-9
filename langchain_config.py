@@ -17,12 +17,12 @@
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
 import os
-import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from newsapi import NewsApiClient
+import streamlit as st
 
 # ✅ Phase 1: API Integration
 # 🔐 Loading API keys from Streamlit secrets
@@ -44,6 +44,7 @@ Using the provided real-time news article content and user query, generate a cle
 - Contain 4 to 6 bullet points
 - Mention key details: what, when, where, who, impact
 - Use professional, news-style language
+- Format each point as: • Main Fact – Supporting Detail
 
 Do NOT make anything up — base everything strictly on the provided content.
 
@@ -57,7 +58,7 @@ Do NOT make anything up — base everything strictly on the provided content.
 
 ---
 
-📌 Provide only 4–6 bullet points without any introduction:
+📌 Provide the final bullet-point summary below (use bullet: •):
 """
 
 # 🎯 Prompt template with required input variables
@@ -97,7 +98,7 @@ def get_summary(query):
 
     used_articles = [article for article in articles if article.get('description') or article.get('content')]
 
-    # 🤖 Generate and return the bullet-point summary
+    # 🤖 Generate and return the bullet-point summary + metadata
     response = llm_chain.run(query=query, summaries=summaries)
     return response, used_articles
 
