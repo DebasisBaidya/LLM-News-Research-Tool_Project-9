@@ -96,15 +96,7 @@ def generate_summary_and_output():
 
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            intro_line = "Here is a factual and unbiased summary of the situation:"
-            if intro_line in response:
-                response = response.replace(intro_line, "").strip()
-
-            formatted_response = "\n".join([
-                f"- {line.strip()}" for line in response.split("•") if line.strip()
-            ])
-            st.success(formatted_response)
-
+            
             # ✅ Articles Section
             if articles:
                 st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
