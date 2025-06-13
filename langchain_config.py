@@ -42,7 +42,7 @@ Using the provided real-time news article content and user query, generate a cle
 ✅ The summary should:
 - Be factually accurate and unbiased
 - Contain 4 to 6 bullet points
-- Each point must follow the format: MainPoint - Subpoint
+- Each point must follow the format: MainPoint ➤ Subpoint
 - Avoid repetition of query
 - Do not generate any intro or closing lines
 
