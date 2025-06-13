@@ -94,19 +94,19 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
+            # ✅ Format AI summary
+            formatted_response = ""
+            for point in response.split("•"):
+                if point.strip():
+                    if " - " in point:
+                        main, sub = point.strip().split(" - ", 1)
+                        formatted_response += f"• **{main.strip()}**\n    ➤ {sub.strip()}\n"
+                    else:
+                        formatted_response += f"• {point.strip()}\n"
+
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-
-            # 🧾 Format response: bold bullet ➤ subpoint
-            formatted_response = ""
-            for line in response.split("•"):
-                if line.strip():
-                    parts = line.strip().split(" - ", 1)
-                    if len(parts) == 2:
-                        formatted_response += f"**➤ {parts[0].strip()}**\n- {parts[1].strip()}\n\n"
-                    else:
-                        formatted_response += f"- {parts[0].strip()}\n\n"
-            st.success(formatted_response.strip())
+            st.success(formatted_response)
 
             # ✅ Articles Section
             articles_text = ""
@@ -117,9 +117,9 @@ def generate_summary_and_output():
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
+                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 {url}"
                     st.markdown(article_block)
-                    articles_text += f"{title}\n📅 {date} | 🏷️ {source}\n🔗 {url}\n\n"
+                    articles_text += f"{article_block}\n"
 
                 st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
@@ -131,7 +131,7 @@ def generate_summary_and_output():
             st.session_state.history.append((query, formatted_response))
 
             # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n\n{articles_text.strip()}"
+            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
 
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
@@ -139,21 +139,20 @@ def generate_summary_and_output():
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
-            # 🧾 PDF Export with encoding fix
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", size=12)
+            pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
+            pdf.set_font("ArialUnicode", size=12)
             for line in combined_output.split("\n"):
-                try:
-                    pdf.multi_cell(0, 10, line.encode("latin-1", "replace").decode("latin-1"))
-                except:
-                    pdf.multi_cell(0, 10, "[Encoding Error]")
+                pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
-            pdf_bytes = pdf.output(dest="S").encode("latin-1")
+            pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
+
             with colB:
                 st.download_button("📄 Download as PDF", data=pdf_output, file_name="summary.pdf", mime="application/pdf", use_container_width=True)
+
             st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.warning("⚠️ Please enter a query first.")
