@@ -136,7 +136,7 @@ def generate_summary_and_output():
         if query:
             response, articles = get_summary(query)
             bullet_lines = [f"• {line.strip()}" for line in response.split("•") if line.strip()]
-            header_line = next((a.get("title") for a in articles if query.lower() in a.get("title", "").lower()), articles[0].get("title", "Top News")) if articles else ""
+            header_line = next((a.get("title") for a in articles if any(kw in a.get("title", "").lower() for kw in ["crash", "killed", "dies", "fire", "accident", "attack", "blast", "explosion"])), articles[0].get("title", "Top News")) if articles else ""
             formatted_summary = "\n".join(bullet_lines[1:]) if len(bullet_lines) > 1 else ""
 
             st.markdown(f"""
