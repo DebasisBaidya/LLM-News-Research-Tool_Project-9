@@ -1,4 +1,4 @@
-# ✅ Phase 3 + 7 Combined: Streamlit Interface + Enhancements
+# ✅ Phase 3 + 7 Combined: Streamlit Interface + Enhancements (app.py)
 
 import streamlit as st
 import pandas as pd
@@ -16,7 +16,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 📌 Task 7.1: Add User Authentication
-# 🔐 Handling login authentication for the app
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
@@ -42,16 +41,13 @@ def handle_authentication():
                 <p style='font-size: 14px; color: gray;'>Hint: Username - Debasis | Password - Baidya123</p>
         """, unsafe_allow_html=True)
 
-        # 👤 Asking for user credentials
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
         password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
 
-        # 🔘 Handling login button click
-        login_btn = st.button("Login", use_container_width=True)
-        if login_btn:
+        if st.button("Login", use_container_width=True):
             if username == "Debasis" and password == "Baidya123":
                 st.session_state.authenticated = True
-                st.rerun()  # 🔁 Refreshing page on success
+                st.rerun()
             else:
                 st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
         st.markdown("</div>", unsafe_allow_html=True)
@@ -59,22 +55,18 @@ def handle_authentication():
 
 # ♻️ Resetting the app while keeping login state
 def reset_all():
-    preserved_keys = {'authenticated'}  # 🔐 Keeping login info safe
+    preserved_keys = {'authenticated'}
     for key in list(st.session_state.keys()):
         if key not in preserved_keys:
             del st.session_state[key]
-    st.session_state.query_input = ""  # 🧹 Clearing input
-    st.rerun()  # 🔁 Reloading the app
+    st.session_state.query_input = ""
+    st.rerun()
 
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
-# 🧠 Handling the main flow: input → AI summary → download
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
-
-    # 💡 Showing example query buttons
     examples = ["Indian Economy", "AI in Healthcare", "Stock Market Crash", "POK Issues"]
 
-    # 🎨 Styling buttons for consistency
     st.markdown("""
         <style>
             .stButton > button {
@@ -85,43 +77,30 @@ def generate_summary_and_output():
         </style>
     """, unsafe_allow_html=True)
 
-    # 🔘 Creating button grid for examples
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
             if st.button(example, use_container_width=True):
-                st.session_state.query_input = example  # ✍️ Auto-filling clicked example
+                st.session_state.query_input = example
 
-    response = ""  # 🧾 Initializing response holder
+    response = ""
+    query = st.text_area('🔍 Enter your Query', key='query_input',
+                         placeholder="e.g., Global Warming Impact", height=100)
 
-    # ✏️ Showing the main input box for user query
-    query = st.text_area(
-        '🔍 Enter your Query',
-        key='query_input',
-        placeholder="e.g., Global Warming Impact",
-        height=100,
-        help="Try real-time topics like AI, politics, climate, finance"
-    )
-
-    # 🚀 Adding "Generate" and "Reset" buttons
-    st.markdown("<div style='display:flex; justify-content:center; gap:1rem; margin-top:1rem;'>", unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1])
     with col1:
         generate = st.button('⚡ Generate Summary', key='generate_btn', use_container_width=True)
     with col2:
         reset = st.button("🔄 Reset All", key='reset_btn', use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
     if reset:
-        reset_all()  # 🔁 Resetting app if clicked
+        reset_all()
 
     if generate:
         if query:
-            # 🤖 Getting AI-generated summary from Langchain
             summaries = get_summary(query)
             response = llm_chain.run({"query": query, "summaries": summaries})
 
-            # 🧾 Showing the summary box
             st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
             st.markdown(f"""
                 <div style='background-color: #e8f5e9; padding: 1rem; border-radius: 10px;'>
@@ -129,23 +108,15 @@ def generate_summary_and_output():
                 </div>
             """, unsafe_allow_html=True)
 
-            # 🕓 Saving to history for later use
             if 'history' not in st.session_state:
                 st.session_state.history = []
             st.session_state.history.append((query, response))
 
-            # 📥 Download options (TXT & PDF)
             download_col = st.columns([1, 1])
             with download_col[0]:
-                st.download_button(
-                    label="📅 Download as TXT",
-                    data=response,
-                    file_name="summary.txt",
-                    mime="text/plain",
-                    use_container_width=True
-                )
+                st.download_button("📅 Download as TXT", data=response,
+                                   file_name="summary.txt", mime="text/plain", use_container_width=True)
 
-            # 📄 Generating the PDF version
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
@@ -160,19 +131,13 @@ def generate_summary_and_output():
             pdf_output.seek(0)
 
             with download_col[1]:
-                st.download_button(
-                    label="📄 Download as PDF",
-                    data=pdf_output,
-                    file_name="summary.pdf",
-                    mime="application/pdf",
-                    use_container_width=True
-                )
+                st.download_button("📄 Download as PDF", data=pdf_output,
+                                   file_name="summary.pdf", mime="application/pdf", use_container_width=True)
         else:
             st.warning("⚠️ Please enter a query to get the summary.")
     return query, response
 
 # 📌 Task 7.3: View Query History
-# 📚 Showing the last 5 queries and summaries
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
         st.markdown("---")
@@ -181,7 +146,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🔁 Running everything in proper order
+# 🚀 Running app logic in sequence
 handle_authentication()
 query, response = generate_summary_and_output()
 show_history()
