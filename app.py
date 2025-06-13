@@ -95,13 +95,21 @@ def create_pdf(text_data):
 # 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
 # 🧠 Handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
-    st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
+    st.markdown("""
+        <style>
+        .example-buttons div button {
+            width: 100% !important;
+        }
+        </style>
+        <div style='text-align:center'><h4>📌 Try queries like:</h4></div>
+    """, unsafe_allow_html=True)
     examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
-            if st.button(example, use_container_width=True):
-                st.session_state.query_input = example
+            st.markdown(f"<div class='example-buttons'>", unsafe_allow_html=True)
+            st.button(example, use_container_width=True, key=f"example_{i}")
+            st.markdown("</div>", unsafe_allow_html=True)
 
     query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
 
@@ -149,7 +157,11 @@ def generate_summary_and_output():
                     article_block = f"- {title}\n  📅 {date} | 🏷️ {source}\n  🔗 [Read More]({url})"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
-                st.success(f"✅ Summary extracted from {len(top_articles)} article(s).")
+                st.markdown("""
+                    <div style='text-align:center;'>
+                        <span style='color: green; font-weight: 600;'>✅ Summary extracted from 3 article(s).</span>
+                    </div>
+                """, unsafe_allow_html=True)
             else:
                 st.warning("⚠️ No articles available.")
 
