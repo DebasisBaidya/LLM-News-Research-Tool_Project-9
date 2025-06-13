@@ -23,23 +23,9 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <style>
-            .login-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                margin: 0 auto;
-                padding: 1rem 2rem;
-                max-width: 400px;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            </style>
-            <div class='login-container'>
-                <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
-                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
+            <div class='login-container' style='text-align: center; max-width: 400px; margin: auto; padding: 1.5rem; background: #f0f2f6; border-radius: 12px;'>
+                <h3>🔐 Login Required</h3>
+                <p style='color: gray;'>Username: Debasis | Password: Baidya123</p>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
@@ -94,47 +80,39 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary (• **Main ➤** Sub)
-            formatted_response = ""
-            for point in response.split("•"):
-                if point.strip():
-                    if "➤" in point:
-                        main, sub = point.strip().split("➤", 1)
-                        formatted_response += f"• **{main.strip()} ➤** {sub.strip()}\n\n"
-                    elif " - " in point:
-                        main, sub = point.strip().split(" - ", 1)
-                        formatted_response += f"• **{main.strip()} ➤** {sub.strip()}\n\n"
-                    else:
-                        formatted_response += f"• {point.strip()}\n\n"
+            # ✅ Format AI summary for screen and export
+            formatted_response = "\n".join([
+                f"• {line.strip()}" for line in response.split("•") if line.strip()
+            ])
 
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
-            st.success(formatted_response.strip())
+            st.success(formatted_response)
 
             # ✅ Articles Section
             articles_text = ""
             if articles:
                 st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
-                for i, article in enumerate(articles, 1):
+                for i, article in enumerate(articles[:3], 1):  # limit to 3 articles
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 [Read More]({url})"
+                    article_block = f"- {i}. {title}  \n  📅 {date} | 🏷️ {source}  \n  🔗 [Read More]({url})"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
 
-                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
+                st.success(f"✅ Summary extracted from {min(len(articles), 3)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
                 st.session_state.history = []
-            st.session_state.history.append((query, formatted_response.strip()))
+            st.session_state.history.append((query, formatted_response))
 
             # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
+            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
 
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
@@ -144,8 +122,8 @@ def generate_summary_and_output():
 
             pdf = FPDF()
             pdf.add_page()
-            pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
-            pdf.set_font("ArialUnicode", size=12)
+            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.set_font("Arial", size=12)
             for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
