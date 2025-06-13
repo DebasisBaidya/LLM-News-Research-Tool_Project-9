@@ -22,38 +22,21 @@ def handle_authentication():
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
-        st.markdown("""
-            <style>
-            .login-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                margin: 0 auto;
-                padding: 1rem 2rem;
-                max-width: 400px;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            </style>
-            <div class='login-container'>
-                <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
-                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
-        """, unsafe_allow_html=True)
+        with st.container():
+            st.markdown("<h3 style='text-align:center;'>🔐 Login Required</h3>", unsafe_allow_html=True)
+            st.caption("Username: Debasis | Password: Baidya123")
 
-        username = st.text_input("Username", placeholder="Try: Debasis", key="username")
-        password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
+            username = st.text_input("Username", placeholder="Try: Debasis", key="username")
+            password = st.text_input("Password", type="password", placeholder="Try: Baidya123", key="password")
 
-        if st.button("Login", use_container_width=True):
-            if username == "Debasis" and password == "Baidya123":
-                st.session_state.authenticated = True
-                st.rerun()
-            else:
-                st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
+            if st.button("Login", use_container_width=True):
+                if username == "Debasis" and password == "Baidya123":
+                    st.session_state.authenticated = True
+                    st.rerun()
+                else:
+                    st.error("❌ Incorrect credentials. Hint: Debasis / Baidya123")
 
-        st.markdown("</div>", unsafe_allow_html=True)
-        st.stop()
+            st.stop()
 
 # ♻️ I’m creating a reset function that clears session except login info
 def reset_all():
@@ -94,30 +77,35 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary with paragraph breaks (no space lines)
+            # ✅ Formatting response with paragraph breaks and no extra spacing
             formatted_response = ""
-            for point in response.split("•"):
-                if point.strip():
-                    formatted_response += f"• {point.strip()}\n\n"
-            formatted_response = formatted_response.strip()
+            for line in response.split("•"):
+                if line.strip():
+                    formatted_response += f"• {line.strip()}\n"
 
-            # ✅ Summary Section
-            st.markdown("### 🧠 AI-Generated News Summary:")
-            st.success(formatted_response)
+            # ✅ Summary Section (centered)
+            st.markdown("<div style='text-align:center'><h3>🧠 AI-Generated News Summary</h3></div>", unsafe_allow_html=True)
+            for point in formatted_response.strip().split("\n"):
+                st.markdown(f"<div style='text-align:center'>{point}</div>", unsafe_allow_html=True)
 
-            # ✅ Articles Section (Top 3 only)
+            # ✅ Articles Section (showing top 3)
             articles_text = ""
             if articles:
-                st.markdown("### 📰 Articles Used for Summary:")
-                for i, article in enumerate(articles[:3], 1):
+                st.markdown("<div style='text-align:center'><h3>📰 Articles Used for Summary</h3></div>", unsafe_allow_html=True)
+                top_articles = articles[:3]
+                for article in top_articles:
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {title}\n📅 {date} | 🏷️ {source}\n🔗 [Read More]({url})"
-                    st.markdown(article_block)
-                    articles_text += f"{article_block}\n"
-                st.success(f"✅ Summary extracted from {min(len(articles), 3)} article(s).")
+
+                    article_html = f"<div style='text-align:center;'>- {title}<br>📅 {date} | 🏷️ {source}<br>🔗 <a href='{url}' target='_blank'>Read More</a></div>"
+                    st.markdown(article_html, unsafe_allow_html=True)
+
+                    # 📄 Preparing article text for export
+                    articles_text += f"- {title}\n📅 {date} | 🏷️ {source}\n🔗 {url}\n"
+
+                st.success(f"✅ Summary extracted from {len(top_articles)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
@@ -127,7 +115,7 @@ def generate_summary_and_output():
             st.session_state.history.append((query, formatted_response))
 
             # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
+            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response.strip()}\n\n📰 Articles Used for Summary:\n{articles_text.strip()}"
 
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
@@ -139,8 +127,8 @@ def generate_summary_and_output():
             pdf.add_page()
             pdf.add_font("ArialUnicode", "", fname="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
             pdf.set_font("ArialUnicode", size=12)
-            for line in combined_output.split("\n"):
-                pdf.multi_cell(0, 10, line.strip())
+            for line in combined_output.strip().split("\n"):
+                pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             pdf_bytes = pdf.output(dest="S").encode("latin-1", errors="ignore")
             pdf_output.write(pdf_bytes)
