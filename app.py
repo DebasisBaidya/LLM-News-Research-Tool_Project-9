@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from langchain_config import get_summary
+from langchain_config import llm_chain, get_summary
 from fpdf import FPDF  # 🧾 I’m using FPDF for PDF generation
 import io
 
@@ -39,7 +39,7 @@ def handle_authentication():
             </style>
             <div class='login-container'>
                 <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
-                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
+                <p style='font-size: 14px; color: gray;'>Hint: Username - Debasis | Password - Baidya123</p>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
@@ -68,7 +68,7 @@ def reset_all():
 # 🧠 I’m handling the flow from query input to AI-generated summary and export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
-    examples = ["Air India Crash", "Ind-Pak War", "Indian Economy", "POK Issues"]
+    examples = ["Air India Crash",  "Ind-Pak War", "Indian Economy", "AI in Healthcare", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
@@ -92,31 +92,24 @@ def generate_summary_and_output():
     if gen_btn:
         if query:
             # 🔗 I’m calling my summarization logic from langchain_config
-            response, articles = get_summary(query)
+            summaries = get_summary(query)
+            response = llm_chain.run({"query": query, "summaries": summaries})
 
-            # ✅ Summary Section
-            st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
+            st.markdown("### 🧠 AI-Generated News Summary:")
+
+            # 🧾 Cleanly separate bullet points from any intro sentence
+            intro_line = "Here is a factual and unbiased summary of the situation:"
+            if intro_line in response:
+                response = response.replace(intro_line, "").strip()
+            
+            # ✅ Format bullet points cleanly
             formatted_response = "\n".join([
                 f"- {line.strip()}" for line in response.split("•") if line.strip()
             ])
+            
+            # 🧠 Show formatted bullet list (without showing the intro line again)
             st.success(formatted_response)
 
-            # ✅ Articles Section
-            articles_text = ""
-            if articles:
-                st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
-                for i, article in enumerate(articles, 1):
-                    title = article.get("title", "No title")
-                    source = article.get("source", {}).get("name", "Unknown Source")
-                    date = article.get("publishedAt", "").split("T")[0]
-                    url = article.get("url", "#")
-                    article_block = f"- {i}. **{title}**  \n📅 {date} | 🏷️ {source}  \n🔗 [Read More]({url})"
-                    st.markdown(article_block)
-                    articles_text += f"{article_block}\n"
-
-                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
-            else:
-                st.warning("⚠️ No articles available.")
 
             # 💾 I’m saving the result in history for reference
             if 'history' not in st.session_state:
@@ -124,18 +117,15 @@ def generate_summary_and_output():
             st.session_state.history.append((query, formatted_response))
 
             # 💡 Show Download options (TXT + PDF)
-            combined_output = f"🧠 AI-Generated News Summary:\n{formatted_response}\n\n📰 Articles Used for Summary:\n{articles_text}"
-
             st.markdown("<div style='display: flex; justify-content: center; gap: 1rem;'>", unsafe_allow_html=True)
             colA, colB = st.columns(2)
-
             with colA:
-                st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
+                st.download_button("📥 Download as TXT", data=formatted_response, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
-            for line in combined_output.split("\n"):
+            for line in formatted_response.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
             try:
