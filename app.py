@@ -3,10 +3,11 @@
 import streamlit as st
 import pandas as pd
 from langchain_config import llm_chain, get_summary
-from fpdf import FPDF  # 🧾 for generating downloadable PDF
+from fpdf import FPDF  # 🧾 For generating PDF summary
 import io
+import re  # 🧼 For cleaning Unicode characters from summary text
 
-# ⚙️ Setting up the app layout and title
+# ⚙️ Setting up the Streamlit layout and app title
 st.set_page_config(page_title="LLM: News Research Tool", layout="centered")
 st.markdown("""
     <div style='display: flex; flex-direction: column; align-items: center; margin-top: 2rem;'>
@@ -15,27 +16,13 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# 📌 Task 7.1: Add User Authentication
+# 📌 Task 7.1: Add Login System
 def handle_authentication():
     if 'authenticated' not in st.session_state:
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <style>
-            .login-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                margin: 0 auto;
-                padding: 1rem 2rem;
-                max-width: 400px;
-                background-color: #f9f9f9;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            </style>
             <div class='login-container'>
                 <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
                 <p style='font-size: 14px; color: gray;'>Hint: Username - Debasis | Password - Baidya123</p>
@@ -53,7 +40,7 @@ def handle_authentication():
         st.markdown("</div>", unsafe_allow_html=True)
         st.stop()
 
-# ♻️ Resetting the app while keeping login state
+# 📌 Task 7.1.2: Resetting session state except login
 def reset_all():
     preserved_keys = {'authenticated'}
     for key in list(st.session_state.keys()):
@@ -62,7 +49,11 @@ def reset_all():
     st.session_state.query_input = ""
     st.rerun()
 
-# 📌 Task 7.2 + 3.2: Input → Summary → Output → Export
+# 🧼 Utility: Remove emojis/special characters to avoid PDF crash
+def remove_unicode_chars(text):
+    return re.sub(r'[^\x00-\x7F]+', '', text)
+
+# 📌 Task 7.2: Input ➜ Output ➜ Export
 def generate_summary_and_output():
     st.markdown("<div style='text-align:center'><h4>📌 Try queries like:</h4></div>", unsafe_allow_html=True)
     examples = ["Indian Economy", "AI in Healthcare", "Stock Market Crash", "POK Issues"]
@@ -117,16 +108,16 @@ def generate_summary_and_output():
                 st.download_button("📅 Download as TXT", data=response,
                                    file_name="summary.txt", mime="text/plain", use_container_width=True)
 
+            # 🧾 Create PDF safely by removing unsupported characters
+            safe_text = remove_unicode_chars(response)
             pdf = FPDF()
             pdf.add_page()
             pdf.set_font("Arial", size=12)
-            for line in response.split("\n"):
+            for line in safe_text.split("\n"):
                 pdf.multi_cell(0, 10, line)
+
             pdf_output = io.BytesIO()
-            try:
-                pdf_bytes = pdf.output(dest='S').encode('latin-1')
-            except UnicodeEncodeError:
-                pdf_bytes = pdf.output(dest='S').encode('utf-8', errors='ignore')
+            pdf_bytes = pdf.output(dest='S').encode('latin-1', errors='ignore')
             pdf_output.write(pdf_bytes)
             pdf_output.seek(0)
 
@@ -137,7 +128,7 @@ def generate_summary_and_output():
             st.warning("⚠️ Please enter a query to get the summary.")
     return query, response
 
-# 📌 Task 7.3: View Query History
+# 📌 Task 7.3: Displaying previous 5 queries
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
         st.markdown("---")
@@ -146,7 +137,7 @@ def show_history():
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
 
-# 🚀 Running app logic in sequence
+# 🚀 Running the app logic
 handle_authentication()
 query, response = generate_summary_and_output()
 show_history()
