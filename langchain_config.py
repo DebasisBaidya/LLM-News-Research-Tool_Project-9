@@ -1,3 +1,19 @@
+# ✅ Phase 1: Environment Setup (Completed)
+# -----------------------------------------------------
+# 📌 Task 1.1: Install Required Libraries
+# - I’m installing the essential Python libraries to handle LLM logic, UI, and news scraping.
+# - The required libraries are: langchain, streamlit, newsapi-python, groq, and python-dotenv
+
+# ✅ Installation Command:
+# pip install langchain streamlit newsapi-python groq python-dotenv
+
+# 📌 Task 1.2: Obtain API Keys
+# - I’m generating the required API keys to access Groq’s LLM and NewsAPI.
+# - Getting Groq API key from: https://console.groq.com/keys
+# - Getting NewsAPI key from: https://newsapi.org/
+
+# 📌 Task 1.3: Stored in 'Streamlit Secret TOML' file
+
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
 import os
@@ -26,11 +42,9 @@ Using the provided real-time news article content and user query, generate a cle
 ✅ The summary should:
 - Be factually accurate and unbiased
 - Contain 4 to 6 bullet points
-- Each bullet must begin with •
-- Do not use bold or subpoints
-- Keep each point as a complete sentence
-- Use paragraph spacing between bullets
-- Do not include any intro or closing line
+- Use • for each bullet
+- Avoid repetition of query
+- Do not generate any intro or closing lines
 
 Do NOT make anything up — base everything strictly on the provided content.
 
@@ -44,7 +58,7 @@ Do NOT make anything up — base everything strictly on the provided content.
 
 ---
 
-📌 Provide the summary below:
+📌 Provide the final formatted bullet-point summary below, using • as bullet symbol:
 """
 
 # 🎯 Prompt template with required input variables
@@ -87,3 +101,9 @@ def get_summary(query):
     # 🤖 Generate and return the bullet-point summary and article metadata
     summary_output = llm_chain.run(query=query, summaries=summaries)
     return summary_output, used_articles
+
+
+# ✅ Outcome:
+# I’ve now fully connected LangChain to Groq’s LLM and NewsAPI.
+# My tool can now fetch and summarize real-time news on any topic — politics, tech, finance, sports, and more —
+# using smart prompt templates and chains for accurate, readable summaries.
