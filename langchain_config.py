@@ -46,6 +46,7 @@ Your job is to summarize real-time news based on the provided articles and the u
 • Each bullet starts with a strong point or fact
 • Use exactly 4 to 6 bullets, prefixed with "•"
 • Avoid repeating the query or giving generic summaries
+• Start the summary with: "Top News Header Found For this: [Your Inferred Title]"
 • Do NOT add conclusions, advice, or any extra fluff
 • NEVER invent information — rely strictly on what’s in the article content
 
@@ -96,7 +97,6 @@ def get_summary(query):
     summary_output = llm_chain.run(query=query, summaries=summaries)
 
     return summary_output, used_articles
-
 
 
 # ✅ Outcome:
