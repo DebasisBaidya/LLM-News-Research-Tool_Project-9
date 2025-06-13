@@ -16,9 +16,7 @@
 
 # ✅ Phase 1 → Phase 3: Environment Setup + LangChain + Summarization Logic
 
-import os
 import streamlit as st
-from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
@@ -73,8 +71,6 @@ newsapi = NewsApiClient(api_key=news_api_key)
 # 🔍 Fetching articles using the query
 def get_news_articles(query):
     articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
-    if not articles['articles']:
-        st.warning("⚠️ No current articles found for this query.")
     return articles['articles']
 
 # 🧾 Extracting summary content
@@ -86,33 +82,22 @@ def summarize_articles(articles):
     return ' '.join(summaries)
 
 # ✅ Phase 3.3: Final Summary Output
-# 📋 Generating summary + article info
+# 📋 Generating summary + article metadata
 def get_summary(query):
     articles = get_news_articles(query)
     summaries = summarize_articles(articles)
 
     if not summaries.strip():
-        st.error("❌ No summary content could be extracted.")
-        return "⚠️ No content found to summarize. Try another topic."
+        return "⚠️ No content found to summarize. Try another topic.", []
 
+    # 🔍 Filter used articles
     used_articles = [article for article in articles if article.get('description') or article.get('content')]
 
-    # 📄 Show article metadata
-    st.markdown("### 📰 Articles Used for Summary:")
-    for i, article in enumerate(used_articles, 1):
-        title = article.get("title", "No Title Found")
-        source = article.get("source", {}).get("name", "Unknown Source")
-        published = article.get("publishedAt", "Unknown Date").split("T")[0]
-        url = article.get("url", "#")
-        st.markdown(f"- {i}. **{title}**  \n📅 {published} | 🏷️ {source}  \n🔗 [Read More]({url})")
+    # 🧠 Generate bullet-point summary from articles
+    response = llm_chain.run({"query": query, "summaries": summaries})
 
-    # ✅ Show stats
-    sentence_count = len([s for s in summaries.split('.') if s.strip()])
-    st.markdown(f"✅ **Summary extracted from {len(used_articles)} article(s) with approx. {sentence_count} sentence(s).**")
-
-    # 🤖 Generate and return the bullet-point summary
-    return llm_chain.run(query=query, summaries=summaries)
-
+    # ✅ Return summary and metadata
+    return response, used_articles
 
 
 # ✅ Outcome:
