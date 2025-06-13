@@ -37,7 +37,7 @@ llm = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")
 enhanced_template = """
 You are a highly factual AI news summarizer.
 
-Using the provided real-time news article content and user query, generate a clear and informative summary of the current situation.
+Using the provided real-time news article content and user query, generate a clear and informative summary of the current situation, don't write any intro line.
 
 ✅ The summary should:
 - Be factually accurate and unbiased
