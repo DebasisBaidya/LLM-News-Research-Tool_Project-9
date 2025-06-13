@@ -63,15 +63,12 @@ newsapi = NewsApiClient(api_key=news_api_key)
 
 # ✅ I am defining a function to fetch current articles based on the user's query
 def get_news_articles(query):
-    # 🔍 I am requesting the latest articles sorted by publication date and title match
-    articles = newsapi.get_everything(qInTitle=query, language='en', sort_by='publishedAt', page_size=10)
+    # 🔍 I am requesting the latest articles sorted by publication date
+    articles = newsapi.get_everything(q=query, language='en', sort_by='publishedAt', page_size=10)
     
-    # ✅ I am showing a warning if no articles are found
     if not articles['articles']:
         st.warning("⚠️ No current articles found for this query. Try with another trending topic.")
-
-    # 🧪 I am printing the title of the first article for confirmation
-    if articles['articles']:
+    else:
         st.write("📰 Top Article Title:", articles['articles'][0].get('title', 'No Title Found'))
 
     return articles['articles']
