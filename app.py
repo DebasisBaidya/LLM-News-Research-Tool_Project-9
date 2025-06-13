@@ -116,10 +116,12 @@ def generate_summary_and_output():
     for i, example in enumerate(examples):
         with example_cols[i]:
             st.markdown(f"<div class='example-buttons'>", unsafe_allow_html=True)
-            st.button(example, use_container_width=True, key=f"example_{i}")
+            if st.button(example, use_container_width=True, key=f"example_{i}"):
+                st.session_state.query_input = example
             st.markdown("</div>", unsafe_allow_html=True)
 
-    query = st.text_area("🔍 Enter your Query", key="query_input", height=100)
+    st.markdown("<div style='text-align:center'><h4>🔍 Enter your Query</h4></div>", unsafe_allow_html=True)
+    query = st.text_area("", key="query_input", height=100, label_visibility="collapsed")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -146,7 +148,7 @@ def generate_summary_and_output():
             st.markdown("<h3 style='text-align:center;'>🧠 AI-Generated News Summary</h3>", unsafe_allow_html=True)
             st.markdown(f"""
                 <div style='background-color:#e8f0fe; padding:1rem; border-radius:6px;'>
-                    <ul style='padding-left: 1.2rem;'>
+                    <ul style='padding-left: 1.2rem; margin: 0;'>
                         {''.join([f'<li style="margin-bottom: 0.4rem;">{line[1:].strip()}</li>' for line in formatted_summary.splitlines() if line.strip()])}
                     </ul>
                 </div>
