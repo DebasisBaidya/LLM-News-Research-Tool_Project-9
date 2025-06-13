@@ -23,9 +23,23 @@ def handle_authentication():
 
     if not st.session_state.authenticated:
         st.markdown("""
-            <div class='login-container' style='text-align: center; max-width: 400px; margin: auto; padding: 1.5rem; background: #f0f2f6; border-radius: 12px;'>
-                <h3>🔐 Login Required</h3>
-                <p style='color: gray;'>Username: Debasis | Password: Baidya123</p>
+            <style>
+            .login-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin: 0 auto;
+                padding: 1rem 2rem;
+                max-width: 400px;
+                background-color: #f9f9f9;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            </style>
+            <div class='login-container'>
+                <h3 style='margin-bottom: 1rem;'>🔐 Login Required</h3>
+                <p style='font-size: 14px; color: gray;'>Username: Debasis | Password: Baidya123</p>
         """, unsafe_allow_html=True)
 
         username = st.text_input("Username", placeholder="Try: Debasis", key="username")
@@ -80,10 +94,12 @@ def generate_summary_and_output():
             # 🔗 I’m calling my summarization logic from langchain_config
             response, articles = get_summary(query)
 
-            # ✅ Format AI summary for screen and export
-            formatted_response = "\n".join([
-                f"• {line.strip()}" for line in response.split("•") if line.strip()
-            ])
+            # ✅ Format AI summary as plain bullet points with paragraph spacing
+            formatted_response = ""
+            for point in response.split("•"):
+                point = point.strip()
+                if point:
+                    formatted_response += f"• {point}\n\n"
 
             # ✅ Summary Section
             st.markdown("<div style='text-align:center'><h4>🧠 AI-Generated News Summary:</h4></div>", unsafe_allow_html=True)
@@ -93,16 +109,16 @@ def generate_summary_and_output():
             articles_text = ""
             if articles:
                 st.markdown("<div style='text-align:center'><h4>📰 Articles Used for Summary:</h4></div>", unsafe_allow_html=True)
-                for i, article in enumerate(articles[:3], 1):  # limit to 3 articles
+                for i, article in enumerate(articles, 1):
                     title = article.get("title", "No title")
                     source = article.get("source", {}).get("name", "Unknown Source")
                     date = article.get("publishedAt", "").split("T")[0]
                     url = article.get("url", "#")
-                    article_block = f"- {i}. {title}  \n  📅 {date} | 🏷️ {source}  \n  🔗 [Read More]({url})"
+                    article_block = f"- {i}. {title}\n  📅 {date} | 🏷️ {source}\n  🔗 {url}"
                     st.markdown(article_block)
                     articles_text += f"{article_block}\n"
 
-                st.success(f"✅ Summary extracted from {min(len(articles), 3)} article(s).")
+                st.success(f"✅ Summary extracted from {len(articles)} article(s).")
             else:
                 st.warning("⚠️ No articles available.")
 
@@ -120,10 +136,11 @@ def generate_summary_and_output():
             with colA:
                 st.download_button("📥 Download as TXT", data=combined_output, file_name="summary.txt", mime="text/plain", use_container_width=True)
 
+            # ✅ PDF Export with Unicode font
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_auto_page_break(auto=True, margin=15)
-            pdf.set_font("Arial", size=12)
+            pdf.add_font("DejaVu", "", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", uni=True)
+            pdf.set_font("DejaVu", size=12)
             for line in combined_output.split("\n"):
                 pdf.multi_cell(0, 10, line)
             pdf_output = io.BytesIO()
