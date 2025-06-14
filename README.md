@@ -58,7 +58,7 @@ The **News Research Tool** is an interactive web app that allows users to:
 ├── app.py               # Streamlit interface
 ├── langchain_config.py  # LLM + NewsAPI setup
 ├── requirements.txt     # Python dependencies
-└── README.md            # This documentation
+├── README.md            # This documentation
 
 ```
 
