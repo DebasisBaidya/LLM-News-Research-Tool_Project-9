@@ -114,4 +114,5 @@ The **News Research Tool** is an interactive web app that allows users to:
 - [Streamlit](https://streamlit.io/)
 
 > ✨ Built for smart research and crisp insights using real-time LLMs.
+
 ```
