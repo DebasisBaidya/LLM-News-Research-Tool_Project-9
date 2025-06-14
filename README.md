@@ -46,7 +46,7 @@ The **News Research Tool** is an interactive web app that allows users to:
 | 🦜 LangChain      | LLM orchestration logic           |
 | 🌐 NewsAPI        | Real-time news data               |
 | 🌿 Streamlit      | Web app frontend                  |
-| 🧾 FPDF           | PDF export generation             |
+| 🧾 ReportLab      | PDF export generation             |
 | 🔐 python-dotenv  | Secure API key loading            |
 
 ---
@@ -56,12 +56,12 @@ The **News Research Tool** is an interactive web app that allows users to:
 ```
 
 ├── app.py               # Streamlit interface
-├── langchain\_config.py  # LLM + NewsAPI setup
+├── langchain_config.py  # LLM + NewsAPI setup
 ├── requirements.txt     # Python dependencies
 └── README.md            # This documentation
 
 - 📒 Note:
-- API keys (GROQ_API_KEY and NEWS_API_KEY) are kept securely in Streamlit Secrets (not in a .env file)
+> API keys (GROQ_API_KEY and NEWS_API_KEY) are kept securely in Streamlit Secrets (not in a .env file)
 
 ```
 
