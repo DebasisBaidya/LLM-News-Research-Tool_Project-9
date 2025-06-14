@@ -60,7 +60,7 @@ The **News Research Tool** is an interactive web app that allows users to:
 ├── requirements.txt     # Python dependencies
 └── README.md            # This documentation
 
-- 📒 Note:
+## 📒 Note:
 - API keys (GROQ_API_KEY and NEWS_API_KEY) are kept securely in Streamlit Secrets (not in a .env file)
 
 ```
