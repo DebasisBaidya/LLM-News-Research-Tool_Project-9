@@ -72,8 +72,6 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 > _Screenshot of Log In & Main App Page_
 
-## 📸 App Preview
-
 <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
 
   <!-- Screenshot 1: smaller and centered -->
