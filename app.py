@@ -110,7 +110,8 @@ def generate_summary_and_output():
         }
         </style>
         <div style='text-align:center; margin-bottom: 0.5rem;'><h4>📌 Try queries like:</h4></div>
-        <p style='text-align: center;'>Click any button below to auto-fill the input box</p> """, unsafe_allow_html=True)
+        <h3 style='text-align: center;'>Click any button below to auto-fill the input box</h3>
+        """, unsafe_allow_html=True)
     examples = ["Air India Crash", "India-Pak War", "Israel-Iran War", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
