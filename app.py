@@ -111,7 +111,7 @@ def generate_summary_and_output():
         <p style='text-align:center; font-size:0.85rem; margin:0;'>Click any button below to auto-fill the input box</p>
         """, unsafe_allow_html=True)
 
-    examples = ["Air India Crash", "India-Pak War", "Israel-Iran War", "IPL 2025 & Stampede"]
+    examples = ["Air India Crash", "India-Pak War", "Israel-Iran War", "IPL 2025 Incident"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
         with example_cols[i]:
