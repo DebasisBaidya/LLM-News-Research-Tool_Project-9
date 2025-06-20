@@ -63,7 +63,8 @@ The **News Research Tool** is an interactive web app that allows users to:
 ```
 
 ## 📒 Note:
-- API keys (GROQ_API_KEY and NEWS_API_KEY) are securely stored in Streamlit Secrets rather than in a .env file, unlike during development in PyCharm. This is to prevent exposure on GitHub, where keys in .env files can be automatically revoked by GitHub or Groq for security reasons.
+- API keys (GROQ_API_KEY and NEWS_API_KEY) are securely stored in Streamlit Secrets rather than in a .env file, unlike during development in PyCharm.
+- This is to prevent exposure on GitHub, where keys in .env files can be automatically revoked by GitHub or Groq for security reasons.
 
 
 ---
