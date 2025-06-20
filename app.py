@@ -105,13 +105,12 @@ def create_pdf(text_data):
 def generate_summary_and_output():
     st.markdown("""
         <style>
-        .example-buttons div button {
-            width: 100% !important;
-        }
+        .example-buttons div button { width: 100% !important; }
         </style>
-        <div style='text-align:center; margin-bottom: 0.5rem;'><h4>📌 Try queries like:</h4></div>
-        <h3 style='text-align: center;'>Click any button below to auto-fill the input box</h3>
+        <div style='text-align:center; margin-bottom:0;'><h4>📌 Try queries like:</h4></div>
+        <p style='text-align:center; font-size:0.85rem; margin:0;'>Click any button below to auto-fill the input box</p>
         """, unsafe_allow_html=True)
+
     examples = ["Air India Crash", "India-Pak War", "Israel-Iran War", "POK Issues"]
     example_cols = st.columns(len(examples))
     for i, example in enumerate(examples):
