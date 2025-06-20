@@ -78,7 +78,7 @@ The **News Research Tool** is an interactive web app that allows users to:
   <img src="Log-In Authentication.png" alt="Screenshot 1" style="width: 80%;"/>
 
   <!-- Screenshot 2: larger and also centered -->
-  <img src="Screenshot 2.png" alt="Screenshot 2" style="width: 80%;" />
+  <img src="Main App Page.png" alt="Screenshot 2" style="width: 80%;" />
 
 </div>
 
