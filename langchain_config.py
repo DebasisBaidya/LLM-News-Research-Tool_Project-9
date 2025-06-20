@@ -42,7 +42,7 @@ Your job is to summarize real-time news based on the provided articles and the u
 
 ✅ Please ensure:
 • The summary is accurate, factual, and fresh
-• The summary covers the incident background clearly and the current developments.
+• The summary covers the incident background clearly and some current developments.
 • Each bullet starts with a strong point or fact
 • Use exactly 4 to 6 bullets, prefixed with "•"
 • Avoid repeating the query or giving generic summaries
