@@ -61,7 +61,7 @@ def handle_authentication():
 def show_history():
     if 'history' in st.session_state and st.session_state.history:
         st.markdown("---")
-        st.subheader("📚 Past Queries")
+        st.markdown("<h3 style='text-align:center;'>📚 Past Queries</h3>", unsafe_allow_html=True)
         for idx, (q, r) in enumerate(reversed(st.session_state.history[-5:]), 1):
             st.markdown(f"**{idx}. {q}**")
             st.markdown(f"> {r[:200]}...")
