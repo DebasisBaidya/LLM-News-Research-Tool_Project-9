@@ -44,7 +44,7 @@ Your job is to summarize real-time news based on the provided articles and the u
 • The summary is accurate, factual, and fresh
 • The summary must cover all about the actual incident that happened clearly following the current developments, if any.
 • Each bullet starts with a strong point or fact
-• Use exactly 6 to 8 bullets, prefixed with "•"
+• Use exactly 5 to 8 bullets, prefixed with "•"
 • Avoid repeating the query or giving generic summaries
 • Start the summary with your strongest bullet — do NOT prefix it with any label like 'Top News Header'
 • Do NOT add conclusions, advice, or any extra fluff
