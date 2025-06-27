@@ -42,11 +42,11 @@ Your job is to summarize real-time news based on the provided articles and the u
 
 ✅ Please ensure:
 • The summary is accurate, factual, and fresh
-• The summary must clearly cover the full incident, including place and time and then reflect all relevant and recent developments, if any.
+• The summary must clearly cover the full incident, including place and time and reflect all relevant and recent developments, if any.
 • Each bullet starts with a unique strong point or fact
 • Use exactly 5 to 8 bullets, prefixed with "•"
 • Avoid repeating the query or giving generic summaries
-• Start the summary with your strongest bullet — do NOT prefix it with any label like 'Top News Header'
+• Start the summary with your strongest bullet like Incident, Place, Time — do NOT prefix it with any label like 'Top News Header'
 • Do NOT add conclusions, advice, or any extra fluff
 • NEVER invent information — rely strictly on what’s in the article content
 
