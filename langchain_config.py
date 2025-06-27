@@ -42,15 +42,28 @@ Your job is to summarize real-time news based on the provided articles and the u
 
 Please keep in mind the following things:
 
-✅ Ensure the first bullet clearly states the actual incident with its exact place, date, and time — this must be the strongest, most factual point.
-✅ Each bullet must present fresh, verified, and complete details, including any recent developments, authority statements, or eyewitness accounts mentioned in the article.
-✅ Every bullet should start with a strong, unique, and concrete fact — avoid vague or repeated openings across points.
-✅ Cover all critical angles of the incident: what happened, where and when, who was involved, how it unfolded, consequences, responses, investigation status, and impact.
-✅ Use a neutral, fact-based, and professional tone — as if preparing a newswire or official report.
-✅ Maintain a clean format: 5 to 8 bullet points, each prefixed by "•" and clearly separated.
-❌ Do not include generic summaries, conclusions, assumptions, emotional language, or editorial opinions.
-❌ Do not invent, interpret, or infer information that is not explicitly stated in the article.
-⚠️ Rely strictly on the article content — even if context seems missing, do not add or guess.
+✅ Begin with the actual incident — the first bullet must clearly state what happened, when, and where (exact place, date, and time). This is the strongest and most important point.
+✅ Each bullet must present fresh, verified, and complete facts as stated in the article — include new developments, official statements, investigations, eyewitness details, and responses.
+✅ Every bullet must start with a strong, unique, and concrete fact — no weak intros, vague phrasing, or repetition.
+✅ Cover all core elements of the event:
+→ What happened
+→ When and where
+→ Who was involved
+→ How it unfolded
+→ Impact or damage
+→ Authorities' response
+→ Public reaction (if any)
+→ Ongoing investigation or follow-up actions
+✅ Use a neutral, factual, and professional tone, similar to a newswire or briefing — avoid storytelling or emotion.
+✅ Maintain clean output: use 5 to 8 bullets, each prefixed by "•", with no intro or summary outside the bullets.
+
+❌ Do NOT include:
+– Generic summaries
+– Conclusions, opinions, or interpretations
+– Emotional language or commentary
+– Labels like “Top Story” or “Headline”
+❌ Never invent or assume anything — if it’s not in the article, don’t include it.
+⚠️ Strictly rely on the article content — do not fill gaps with speculation or outside context.
 
 ---
 
