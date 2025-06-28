@@ -9,7 +9,7 @@
 </div>
 
 - 🔗 **Live App**: [Click here to try the app](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
-- 🎬 **Demo Video**: [Watch the demo video](https://youtu.be/s5lrqv6oAR4))
+- 🎬 **Demo Video**: [Watch the demo video](https://youtu.be/s5lrqv6oAR4)
 
 ---
 
