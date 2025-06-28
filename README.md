@@ -2,14 +2,14 @@
 🔍 Real-Time AI-Powered News Summarizer using LangChain, Groq & NewsAPI
 
 [![Streamlit App](https://img.shields.io/badge/🚀%20Live%20App-Open%20in%20Browser-brightgreen?style=for-the-badge)](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
-[![🎬 Demo Video](https://img.shields.io/badge/🎬%20Demo-Watch%20Now-red?style=for-the-badge)](https://your-demo-video-link.com)
+[![🎬 Demo Video](https://img.shields.io/badge/🎬%20Demo-Watch%20Now-red?style=for-the-badge)](https://youtu.be/s5lrqv6oAR4))
 [![Python](https://img.shields.io/badge/Python-3.13-blue?style=for-the-badge)](https://www.python.org/downloads/release/python-3130a1/)
 [![LangChain](https://img.shields.io/badge/LangChain%20+%20Groq-News%20API-orange?style=for-the-badge)](https://www.langchain.com/)
 
 </div>
 
 - 🔗 **Live App**: [Click here to try the app](https://llm-news-research-tool-debasisbaidya.streamlit.app/)
-- 🎬 **Demo Video**: [Watch the demo video](https://your-demo-video-link.com)
+- 🎬 **Demo Video**: [Watch the demo video](https://youtu.be/s5lrqv6oAR4))
 
 ---
 
@@ -89,22 +89,36 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 > _How the App Works_
 
-🎥 [Watch Demo](https://your-demo-link.com)
+🎥 [Watch Demo](https://youtu.be/s5lrqv6oAR4))
 
 ---
 
-## 👤 Author: Debasis Baidya
+## 🙋‍♂️ About Me
 
-<a href="https://www.linkedin.com/in/debasisbaidya" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin&logoColor=white&style=flat" />
+**Debasis Baidya**  
+Senior MIS | Data Science Intern  
+✅ Automated 80%+ of manual processes at my workplace  
+📊 Skilled in Python, Power BI, SQL, Google Apps Script, ML, DL, NLP  
+<p align="left">
+  📫 <strong>Connect with me:</strong>&nbsp;
+
+  <a href="https://www.linkedin.com/in/debasisbaidya">
+    <img src="https://img.shields.io/badge/LinkedIn-View_Profile-blue?logo=linkedin&logoColor=white" />
   </a>
+
   <a href="mailto:speak2debasis@gmail.com">
-    <img src="https://img.shields.io/badge/Gmail-Mail_Me-red?logo=gmail&logoColor=white&style=flat" />
+    <img src="https://img.shields.io/badge/Gmail-Mail_Me-red?logo=gmail&logoColor=white" />
   </a>
+
   <a href="https://api.whatsapp.com/send?phone=918013316086&text=Hi%20Debasis!">
-    <img src="https://img.shields.io/badge/WhatsApp-Chat-green?logo=whatsapp&logoColor=white&style=flat" />
+    <img src="https://img.shields.io/badge/WhatsApp-Message-green?logo=whatsapp&logoColor=white" />
   </a>
-  
+</p>
+
+---
+
+⭐ If you found this project helpful, don’t forget to **star this repo** and stay connected!
+
 ---
 
 ## 🧠 Powered By
@@ -115,5 +129,3 @@ The **News Research Tool** is an interactive web app that allows users to:
 - [Streamlit](https://streamlit.io/)
 
 > ✨ Built for smart research and crisp insights using real-time LLMs.
-
-```
