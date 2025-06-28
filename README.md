@@ -89,7 +89,7 @@ The **News Research Tool** is an interactive web app that allows users to:
 
 > _How the App Works_
 
-🎥 [Watch Demo](https://youtu.be/s5lrqv6oAR4))
+🎥 [Watch Demo](https://youtu.be/s5lrqv6oAR4)
 
 ---
 
