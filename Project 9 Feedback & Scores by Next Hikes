@@ -1,0 +1,12 @@
+# Project 9 Evaluation Feedback & Scores by Next Hikes
+
+## Feedback
+- Your project is very well done with a complete LangChain + Groq setup, NewsAPI integration, and a smooth Streamlit interface.
+- You have added optional features like authentication, history, and PDF/TXT export which go beyond the base requirements.
+- The code is structured neatly, dependencies are listed in requirements.txt and the summarization pipeline is clear.
+- Overall, the project meets all requirements from the document and shows thoughtful enhancements in both usability and presentation.
+
+## Scores
+- **Score**: 97/100
+- **Grade**: A
+
